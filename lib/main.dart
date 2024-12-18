@@ -1,6 +1,7 @@
+import 'package:event_planner/tabs/home.dart';
+import 'package:event_planner/tabs/profile/profile_screen.dart';
 import 'package:flutter/material.dart';
 
-import 'Screens/home.dart';
 import 'core/utils/app_theme.dart';
 
 
@@ -14,9 +15,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      darkTheme: AppTheme.darkTheme,
-      themeMode: ThemeMode.dark,
-      home: const Home(),
+      darkTheme: AppTheme.darktheme,
+      theme: AppTheme.lighttheme,
+      themeMode: ThemeMode.light,
+      home: const ProfileScreen(),
     );
   }
 }
