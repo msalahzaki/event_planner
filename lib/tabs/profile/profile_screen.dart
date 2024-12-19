@@ -1,7 +1,7 @@
 import 'package:event_planner/core/utils/app_assets.dart';
 import 'package:event_planner/core/utils/app_styles.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../core/utils/app_color.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -12,20 +12,23 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+
   @override
   Widget build(BuildContext context) {
+    var local =AppLocalizations.of(context)! ;
     String selectedTheme = "Light";
     String selectedLanguage = "en";
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(bottomLeft: Radius.circular(40)),)
-        ,toolbarHeight: size.height * .2,
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(bottomLeft: Radius.circular(40)),)
+        ,toolbarHeight: size.height * .15,
         title: Row(
           children: [
-            Image.asset(AppAssets.Route),
-            SizedBox(width: 20,),
-            Column(crossAxisAlignment: CrossAxisAlignment.start,
+            SizedBox(width: 100,
+                child: Image.asset(AppAssets.Route)),
+            const SizedBox(width: 20,),
+            const Column(crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text("John Safwat"),
                 Text("John Safwat@gamil.com"),
@@ -39,8 +42,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Text(
-              "Language",
+             Text(
+              local.language,
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             DropdownButtonFormField<String>(
@@ -52,14 +55,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 DropdownMenuItem(
                   value: "en",
                   child: Text(
-                    "English",
+                    local.english,
                     style: AppStyles.bold20blue,
                   ),
                 ),
                 DropdownMenuItem(
                   value: "ar",
                   child: Text(
-                    "Arabic",
+                    local.arabic,
                     style: AppStyles.bold20blue,
                   ),
                 ),
@@ -72,7 +75,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             const SizedBox(height: 20),
             Text(
-              "Theme",
+              local.theme,
               style: AppStyles.bold20black,
             ),
             DropdownButtonFormField<String>(
@@ -84,14 +87,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 DropdownMenuItem(
                   value: "Light",
                   child: Text(
-                    "Light",
+                    local.light,
                     style: AppStyles.bold20blue,
                   ),
                 ),
                 DropdownMenuItem(
                   value: "Dark",
                   child: Text(
-                    "Dark",
+                    local.dark,
                     style: AppStyles.bold20blue,
                   ),
                 ),
@@ -105,7 +108,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             const Spacer(),
             ElevatedButton(
               onPressed: () {},
-              style: ButtonStyle(padding:MaterialStateProperty.all(const EdgeInsets.all(15)) ,
+              style: ButtonStyle(padding:WidgetStateProperty.all(const EdgeInsets.all(15)) ,
                   backgroundColor: WidgetStateProperty.all(AppColor.red),
               ),
               child: Row(
@@ -115,7 +118,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     color: AppColor.white,
                   ),const SizedBox(width: 20,),
                   Text(
-                    "LogOut",
+                    local.logout,
                     style: AppStyles.normal20white,
                   ),
                 ],

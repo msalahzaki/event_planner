@@ -10,5 +10,4 @@ static  TextStyle normal20blue = GoogleFonts.inter(color: AppColor.primaryLight 
 static  TextStyle normal16black = GoogleFonts.inter(color: AppColor.black , fontSize: 16,fontWeight: FontWeight.w500);
 static  TextStyle normal20white = GoogleFonts.inter(color: AppColor.white , fontSize: 20,fontWeight: FontWeight.w500);
 
-
 }
