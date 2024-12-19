@@ -9,5 +9,7 @@ static  TextStyle bold20black = GoogleFonts.inter(color: AppColor.black , fontSi
 static  TextStyle normal20blue = GoogleFonts.inter(color: AppColor.primaryLight , fontSize: 20,fontWeight: FontWeight.w500);
 static  TextStyle normal16black = GoogleFonts.inter(color: AppColor.black , fontSize: 16,fontWeight: FontWeight.w500);
 static  TextStyle normal20white = GoogleFonts.inter(color: AppColor.white , fontSize: 20,fontWeight: FontWeight.w500);
+static  TextStyle normal16white = GoogleFonts.inter(color: AppColor.white , fontSize: 16,fontWeight: FontWeight.w500);
+static  TextStyle bold24white = GoogleFonts.inter(color: AppColor.white , fontSize: 24,fontWeight: FontWeight.w700);
 
 }

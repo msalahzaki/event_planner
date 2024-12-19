@@ -1,20 +1,25 @@
 import 'package:event_planner/core/utils/app_assets.dart';
 import 'package:event_planner/core/utils/app_styles.dart';
+import 'package:event_planner/providers/language_provider.dart';
+import 'package:event_planner/providers/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 import '../../core/utils/app_color.dart';
 
-class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
+class ProfilePage extends StatefulWidget {
+  const ProfilePage({super.key});
 
   @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
+  State<ProfilePage> createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _ProfileScreenState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    var languageProvider = Provider.of<LanguageProvider>(context);
+    var themeProvider = Provider.of<ThemeProvider>(context);
     var local =AppLocalizations.of(context)! ;
     String selectedTheme = "Light";
     String selectedLanguage = "en";
@@ -28,23 +33,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
             SizedBox(width: 100,
                 child: Image.asset(AppAssets.Route)),
             const SizedBox(width: 20,),
-            const Column(crossAxisAlignment: CrossAxisAlignment.start,
+             Column(crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("John Safwat"),
-                Text("John Safwat@gamil.com"),
+                Text("John Safwat",style: AppStyles.bold24white,),
+                Text("John Safwat@gamil.com",style: AppStyles.normal16white),
               ],
             )
           ],
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.fromLTRB(8, 8, 8, 30),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
              Text(
               local.language,
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style:  AppStyles.bold20black.copyWith(color: Theme.of(context).colorScheme.secondary),
             ),
             DropdownButtonFormField<String>(
               decoration: dropdownboxdecorion(),
@@ -52,14 +57,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
               iconEnabledColor: AppColor.primaryLight,
               value: selectedLanguage,
               items: [
-                DropdownMenuItem(
+                DropdownMenuItem(onTap: () => languageProvider.changeLanguage(language: "en"),
                   value: "en",
                   child: Text(
                     local.english,
                     style: AppStyles.bold20blue,
                   ),
                 ),
-                DropdownMenuItem(
+                DropdownMenuItem(onTap: () => languageProvider.changeLanguage(language: "ar"),
                   value: "ar",
                   child: Text(
                     local.arabic,
@@ -76,7 +81,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             const SizedBox(height: 20),
             Text(
               local.theme,
-              style: AppStyles.bold20black,
+              style: AppStyles.bold20black.copyWith(color: Theme.of(context).colorScheme.secondary),
             ),
             DropdownButtonFormField<String>(
               iconSize: 30,
@@ -84,14 +89,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
               decoration: dropdownboxdecorion(),
               value: selectedTheme,
               items: [
-                DropdownMenuItem(
+                DropdownMenuItem(onTap: () => themeProvider.changeTheme(ThemeMode.light),
                   value: "Light",
                   child: Text(
                     local.light,
                     style: AppStyles.bold20blue,
                   ),
                 ),
-                DropdownMenuItem(
+                DropdownMenuItem(onTap: () => themeProvider.changeTheme(ThemeMode.dark),
                   value: "Dark",
                   child: Text(
                     local.dark,
