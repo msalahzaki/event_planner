@@ -1,4 +1,5 @@
 
+import 'package:event_planner/frist_run/intial_screen.dart';
 import 'package:event_planner/providers/language_provider.dart';
 import 'package:event_planner/providers/theme_provider.dart';
 import 'package:event_planner/tabs/home.dart';
@@ -33,7 +34,7 @@ class MyApp extends StatelessWidget {
       theme: AppTheme.lighttheme,
       themeMode: themeProvider.theme,
       locale:  Locale(languageProvider.language),
-      home: const Home(),
+      home: const IntialScreen(),
     );
   }
 }

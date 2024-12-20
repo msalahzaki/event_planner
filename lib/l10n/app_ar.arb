@@ -14,6 +14,7 @@
   "password" : "الرقم السرى",
   "forget_password": "نسيت الرقم السرى ؟",
   "login": "تسجيل دخول",
+ "lets_start": "هيا ابدء",
   "dont_have_account" : "ليس لديك حساب ؟ ",
   "create_account": "انشاء حساب",
 "login_with_google" :"الدخول بحساب جوجل",

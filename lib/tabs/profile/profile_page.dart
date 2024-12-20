@@ -15,14 +15,15 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfilePage> {
-
+  late String selectedLanguage ;
+ late String selectedTheme ;
   @override
   Widget build(BuildContext context) {
     var languageProvider = Provider.of<LanguageProvider>(context);
     var themeProvider = Provider.of<ThemeProvider>(context);
     var local =AppLocalizations.of(context)! ;
-    String selectedTheme = "Light";
-    String selectedLanguage = "en";
+    String selectedTheme = themeProvider.theme == ThemeMode.light ? "Light" : "Dark" ;
+     selectedLanguage = languageProvider.language;
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
@@ -57,18 +58,24 @@ class _ProfileScreenState extends State<ProfilePage> {
               iconEnabledColor: AppColor.primaryLight,
               value: selectedLanguage,
               items: [
-                DropdownMenuItem(onTap: () => languageProvider.changeLanguage(language: "en"),
+                DropdownMenuItem(onTap: () {
+                  languageProvider.changeLanguage(language: "en");
+
+                },
                   value: "en",
                   child: Text(
                     local.english,
-                    style: AppStyles.bold20blue,
+                    style: selectedLanguage == "en" ? AppStyles.bold20blue : AppStyles.bold20black,
                   ),
                 ),
-                DropdownMenuItem(onTap: () => languageProvider.changeLanguage(language: "ar"),
+                DropdownMenuItem(onTap: () {
+                  languageProvider.changeLanguage(language: "ar");
+
+                },
                   value: "ar",
                   child: Text(
                     local.arabic,
-                    style: AppStyles.bold20blue,
+                    style: selectedLanguage == "ar" ? AppStyles.bold20blue : AppStyles.bold20black
                   ),
                 ),
               ],
@@ -93,14 +100,14 @@ class _ProfileScreenState extends State<ProfilePage> {
                   value: "Light",
                   child: Text(
                     local.light,
-                    style: AppStyles.bold20blue,
+                    style:  selectedTheme == "Light" ? AppStyles.bold20blue : AppStyles.bold20black,
                   ),
                 ),
                 DropdownMenuItem(onTap: () => themeProvider.changeTheme(ThemeMode.dark),
                   value: "Dark",
                   child: Text(
                     local.dark,
-                    style: AppStyles.bold20blue,
+                    style: selectedTheme == "Dark" ? AppStyles.bold20blue : AppStyles.bold20black,
                   ),
                 ),
               ],
