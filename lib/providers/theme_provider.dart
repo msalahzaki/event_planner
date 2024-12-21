@@ -9,7 +9,6 @@ class ThemeProvider extends ChangeNotifier{
      if(theme != newtheme){
        theme= newtheme;
        notifyListeners();
-
      }
 
    }

@@ -1,8 +1,9 @@
 import 'package:event_planner/core/utils/app_assets.dart';
 import 'package:event_planner/core/utils/app_styles.dart';
 import 'package:flutter/material.dart';
-import 'package:introduction_screen/introduction_screen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:introduction_screen/introduction_screen.dart';
+
 import '../core/utils/app_color.dart';
 import '../tabs/home.dart';
 
@@ -20,8 +21,10 @@ class _IntroScreenState extends State<IntroScreen> {
   @override
   Widget build(BuildContext context) {
     size = MediaQuery.of(context).size;
-    var local = AppLocalizations.of(context)!;
+    local = AppLocalizations.of(context)!;
     return IntroductionScreen(
+      bodyPadding: EdgeInsets.all(0),
+      controlsPadding: EdgeInsets.all(0),
       dotsDecorator: DotsDecorator(
           size: const Size.square(10.0),
           activeSize: const Size(20.0, 10.0),
@@ -72,7 +75,7 @@ class _IntroScreenState extends State<IntroScreen> {
         title: "",
         bodyWidget: Column(
           children: [
-            Image.asset(AppAssets.Logo),
+            Image.asset(AppAssets.Logo2),
             const SizedBox(
               height: 10,
             ),

@@ -1,13 +1,11 @@
-
-import 'package:event_planner/frist_run/intial_screen.dart';
+import 'package:event_planner/auth/login_page.dart';
 import 'package:event_planner/providers/language_provider.dart';
 import 'package:event_planner/providers/theme_provider.dart';
-import 'package:event_planner/tabs/home.dart';
-
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'core/utils/app_theme.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
+
+import 'core/utils/app_theme.dart';
 
 
 void main() {
@@ -34,7 +32,7 @@ class MyApp extends StatelessWidget {
       theme: AppTheme.lighttheme,
       themeMode: themeProvider.theme,
       locale:  Locale(languageProvider.language),
-      home: const IntialScreen(),
+      home: const LoginPage(),
     );
   }
 }

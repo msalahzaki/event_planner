@@ -2,9 +2,11 @@ import 'package:event_planner/core/utils/app_assets.dart';
 import 'package:event_planner/core/utils/app_color.dart';
 import 'package:event_planner/core/utils/app_styles.dart';
 import 'package:event_planner/frist_run/intro_screen.dart';
+import 'package:event_planner/frist_run/widget/language_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
+
 import '../providers/language_provider.dart';
 import '../providers/theme_provider.dart';
 
@@ -16,8 +18,8 @@ class IntialScreen extends StatefulWidget {
 }
 
 class _IntialScreenState extends State<IntialScreen> {
-  late var languageProvider;
-  late var themeProvider;
+  late LanguageProvider languageProvider;
+  late ThemeProvider themeProvider;
   late Size size;
 
   @override
@@ -32,7 +34,11 @@ class _IntialScreenState extends State<IntialScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Center(child: Image.asset(AppAssets.Logo)),
+          Center(
+              child: Image.asset(
+            AppAssets.Logo2,
+            height: size.height * .2,
+          )),
           Center(
             child: Image.asset(
               AppAssets.Intro_1,
@@ -58,34 +64,7 @@ class _IntialScreenState extends State<IntialScreen> {
                 local.language,
                 style: AppStyles.normal20blue,
               ),
-              Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                    border: Border.all(color: AppColor.primaryLight, width: 2)),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    InkWell(onTap: () {
-                      languageProvider.changeLanguage(language:"en");
-                      setState(() {
-
-                      });
-                    },
-                        child: languageOption(AppAssets.USA_icon, "en")),
-                    const SizedBox(
-                      width: 6,
-                    ),
-                    InkWell(onTap: () {
-                      languageProvider.changeLanguage(language:"ar");
-                      setState(() {
-
-                      });
-                    },
-
-                        child: languageOption(AppAssets.Egypt_icon, "ar")),
-                  ],
-                ),
-              )
+              LanguageWidget(),
             ],
           ),
           SizedBox(
@@ -129,11 +108,13 @@ class _IntialScreenState extends State<IntialScreen> {
           SizedBox(
             height: size.height * 0.025,
           ),
-          Container(
+          SizedBox(
             width: double.infinity,
             child: ElevatedButton(
               onPressed: () {
-                Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => IntroScreen(),));
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (context) => const IntroScreen(),
+                ));
               },
               style: ButtonStyle(
                   backgroundColor:
@@ -147,19 +128,6 @@ class _IntialScreenState extends State<IntialScreen> {
         ],
       ),
     ));
-  }
-
-  Widget languageOption(String url, String value) {
-    return CircleAvatar(
-      backgroundColor: languageProvider.language == value
-          ? AppColor.primaryLight
-          : AppColor.transpernt,
-      maxRadius: 16,
-      child: Image.asset(
-        url,
-        height: size.height * 0.04,
-      ),
-    );
   }
 
   Widget themeOption(IconData icon, ThemeMode themeMode) {
