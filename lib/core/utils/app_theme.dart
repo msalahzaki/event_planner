@@ -35,6 +35,9 @@ class AppTheme {
           enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
               borderSide: BorderSide(color: AppColor.gray, width: 1)),
+          focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: BorderSide(color: AppColor.gray, width: 1)),
           iconColor: AppColor.gray,
           hintStyle: AppStyles.normal16gray,
           prefixIconColor: AppColor.gray,
@@ -69,7 +72,9 @@ class AppTheme {
           enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
               borderSide: BorderSide(color: AppColor.white, width: 1)),
-          iconColor: AppColor.gray,
+          focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: BorderSide(color: AppColor.white, width: 1)),
           hintStyle: AppStyles.normal16white,
           prefixIconColor: AppColor.white,
           suffixIconColor: AppColor.white));

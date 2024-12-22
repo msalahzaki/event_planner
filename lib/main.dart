@@ -1,6 +1,6 @@
-import 'package:event_planner/auth/login_page.dart';
 import 'package:event_planner/providers/language_provider.dart';
 import 'package:event_planner/providers/theme_provider.dart';
+import 'package:event_planner/tabs/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
       theme: AppTheme.lighttheme,
       themeMode: themeProvider.theme,
       locale:  Locale(languageProvider.language),
-      home: const LoginPage(),
+      home: const Home(),
     );
   }
 }
