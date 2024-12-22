@@ -1,3 +1,4 @@
+import 'package:event_planner/auth/login_page.dart';
 import 'package:event_planner/core/utils/app_assets.dart';
 import 'package:event_planner/core/utils/app_styles.dart';
 import 'package:flutter/material.dart';
@@ -23,8 +24,6 @@ class _IntroScreenState extends State<IntroScreen> {
     size = MediaQuery.of(context).size;
     local = AppLocalizations.of(context)!;
     return IntroductionScreen(
-      bodyPadding: EdgeInsets.all(0),
-      controlsPadding: EdgeInsets.all(0),
       dotsDecorator: DotsDecorator(
           size: const Size.square(10.0),
           activeSize: const Size(20.0, 10.0),
@@ -45,7 +44,7 @@ class _IntroScreenState extends State<IntroScreen> {
             ? Icons.arrow_circle_right_outlined
             : Icons.arrow_circle_left_outlined,
         color: AppColor.primaryLight,
-        size: 30,
+        size: 35,
       ),
       done: Icon(
         Directionality.of(context) == TextDirection.ltr
@@ -66,40 +65,34 @@ class _IntroScreenState extends State<IntroScreen> {
       showDoneButton: true,
 
       onDone: () => Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const Home())),
+          MaterialPageRoute(builder: (context) => const LoginPage())),
     );
   }
 
   PageViewModel intropage(String imageurl, String title, String subTitle) {
     return PageViewModel(
-        title: "",
-        bodyWidget: Column(
-          children: [
-            Image.asset(AppAssets.Logo2),
-            const SizedBox(
-              height: 10,
-            ),
-            SizedBox(height: size.height * .4, child: Image.asset(imageurl)),
-            const SizedBox(
-              height: 10,
-            ),
-            Row(
-              children: [
-                Text(
-                  title,
-                  style: AppStyles.bold20blue,
-                )
-              ],
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            Text(
-              subTitle,
-              style: AppStyles.normal16black
-                  .copyWith(color: Theme.of(context).colorScheme.secondary),
-            ),
-          ],
-        ));
+      title: "",
+      bodyWidget: Column(
+        children: [
+          const SizedBox(height: 5),
+          Image.asset(AppAssets.Logo),
+          const SizedBox(height: 8),
+          SizedBox(height: size.height * .4, child: Image.asset(imageurl)),
+          const SizedBox(height: 5),
+          Text(
+            title,
+            style: AppStyles.bold20blue,
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Text(
+            subTitle,
+            style: AppStyles.normal16black
+                .copyWith(color: Theme.of(context).colorScheme.secondary),
+          ),
+        ],
+      ),
+    );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:event_planner/auth/login_page.dart';
+import 'package:event_planner/frist_run/intial_screen.dart';
 import 'package:event_planner/providers/language_provider.dart';
 import 'package:event_planner/providers/theme_provider.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +33,7 @@ class MyApp extends StatelessWidget {
       theme: AppTheme.lighttheme,
       themeMode: themeProvider.theme,
       locale:  Locale(languageProvider.language),
-      home: const LoginPage(),
+      home: const IntialScreen(),
     );
   }
 }
