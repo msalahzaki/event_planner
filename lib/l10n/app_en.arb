@@ -24,9 +24,17 @@
   "already_have_account" :"Already Have Account ?" ,
   "reset_password" : "Reset Password",
   "welcome_back": "Welcome Back ",
-
-
-
+  "search_for_event": "Search for Event",
+  "create_event": "Create Event",
+  "title": "Title",
+  "description": "Description",
+  "event_description": "Event Description",
+  "event_date": "Event Date",
+  "event_time": "Event Time",
+  "choose_time": "Choose Time",
+  "location": "Location",
+  "choose_event_location": "Choose Event Location",
+  "add_event": "Add Event",
 
 
   "intro1_title": "Personalize Your Experience",

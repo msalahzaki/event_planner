@@ -2,6 +2,7 @@ import 'package:event_planner/core/utils/app_color.dart';
 import 'package:event_planner/core/utils/app_styles.dart';
 import 'package:event_planner/model/category_model.dart';
 import 'package:event_planner/tabs/home_page/category_widget.dart';
+import 'package:event_planner/tabs/home_page/event_item_widegt.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -14,6 +15,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<CategoryModel> categories = Categories.getCategories();
+  int selectedCategory = -1;
   @override
   Widget build(BuildContext context) {
     var local = AppLocalizations.of(context)!;
@@ -71,27 +73,70 @@ class _HomePageState extends State<HomePage> {
           Container(
             padding: const EdgeInsets.symmetric(vertical: 10),
             height: size.height * 0.08,
-            decoration: const BoxDecoration(
-                borderRadius: BorderRadius.only(
+            decoration: BoxDecoration(
+                borderRadius: const BorderRadius.only(
                     bottomLeft: Radius.circular(24),
                     bottomRight: Radius.circular(24)),
-                color: AppColor.primaryLight),
+                color: Theme.of(context).primaryColor),
             child: Row(
               children: [
+                InkWell(
+                  onTap: () {
+                    selectedCategory = -1;
+                    setState(() {});
+                  },
+                  child: SizedBox(
+                    height: double.infinity,
+                    child: CategoryWidget(
+                      icon: Icons.clear_all,
+                      label: "All ",
+                      isSelected: selectedCategory == -1,
+                    ),
+                  ),
+                ),
                 Expanded(
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
                     itemCount: categories.length,
                     itemBuilder: (context, index) {
-                      return CategoryWidget(
+                      return InkWell(
+                        onTap: () {
+                          selectedCategory = index;
+                          setState(() {});
+                        },
+                        child: CategoryWidget(
                           icon: categories[index].icon,
-                          label: categories[index].name);
+                          label: categories[index].name,
+                          isSelected: index == selectedCategory,
+                        ),
+                      );
                     },
                   ),
                 ),
               ],
             ),
           ),
+          Expanded(
+            child: ListView(
+              children: [
+                EventItemWidegt(
+                    image: categories[1].image,
+                    date: "22 Dec",
+                    title: "This is a Birthday Party ",
+                    isFavorite: true),
+                EventItemWidegt(
+                    image: categories[2].image,
+                    date: "22 Dec",
+                    title: "Meeting for Updating The Development Method",
+                    isFavorite: true),
+                EventItemWidegt(
+                    image: categories[3].image,
+                    date: "22 Dec",
+                    title: "",
+                    isFavorite: true),
+              ],
+            ),
+          )
         ],
       ),
     );

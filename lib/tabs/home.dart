@@ -14,7 +14,12 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   int current_index = 0;
-  List<Widget> tab = [const HomePage(), const FavoritePage(), const MapPage(), const ProfilePage()];
+  List<Widget> tab = [
+    const HomePage(),
+    const MapPage(),
+    const FavoritePage(),
+    const ProfilePage()
+  ];
   @override
   Widget build(BuildContext context) {
     var local = AppLocalizations.of(context)!;

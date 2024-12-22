@@ -23,6 +23,19 @@
   "re_password": "اعاده كلمه السر",
   "already_have_account" :"لديك حساب بالفعل ؟" ,
   "reset_password" : "إعادة تعيين كلمة المرور",
+  "welcome_back": "مرحبا ,,  ",
+  "search_for_event": "بحث عن حدث",
+  "create_event": "انشاء حدث",
+  "title": "العنوان",
+  "description": "الوصف",
+  "event_description": "وصف الحدث",
+  "event_date": "تاربخ الحدث",
+  "event_time": "توقيت الحدث",
+  "choose_time": "اختار الوقت",
+  "location": "الموقع",
+  "choose_event_location": "اختار الموقع",
+  "add_event": "اضافة الحدث",
+
 
 
   "intro1_title": "إضفاء الطابع الشخصي على تجربتك",
