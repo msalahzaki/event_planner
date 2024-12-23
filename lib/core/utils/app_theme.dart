@@ -19,8 +19,8 @@ class AppTheme {
       ),
       // ElevatedButton
       elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-        padding: EdgeInsets.all(15),
+          style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        padding: EdgeInsets.all(10),
         backgroundColor: AppColor.primaryLight,
       )),
 
@@ -57,9 +57,9 @@ class AppTheme {
       appBarTheme: const AppBarTheme(backgroundColor: AppColor.primaryDark),
       // ElevatedButton
       elevatedButtonTheme: ElevatedButtonThemeData(
-
-          style: ElevatedButton.styleFrom(
-            padding: const EdgeInsets.all(15),
+          style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        textStyle: AppStyles.bold20white,
+        padding: const EdgeInsets.all(10),
         backgroundColor: AppColor.primaryLight,
       )),
       // Floating Button Theme
@@ -72,7 +72,6 @@ class AppTheme {
 
       inputDecorationTheme: InputDecorationTheme(
           enabledBorder: OutlineInputBorder(
-
               borderRadius: BorderRadius.circular(16),
               borderSide: BorderSide(color: AppColor.white, width: 1)),
           focusedBorder: OutlineInputBorder(

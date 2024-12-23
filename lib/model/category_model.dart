@@ -35,7 +35,7 @@ class Categories {
     categories.add(CategoryModel(
         name: "WorkShop", image: AppAssets.Workshop, icon: Icons.work));
     categories.add(CategoryModel(
-        name: "Exhibition", image: AppAssets.Workshop, icon: Icons.photo));
+        name: "Exhibition", image: AppAssets.Exhibition, icon: Icons.photo));
     return categories;
   }
 }

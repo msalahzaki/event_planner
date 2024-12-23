@@ -1,3 +1,4 @@
+import 'package:event_planner/tabs/events/add_event_screen.dart';
 import 'package:event_planner/tabs/home_page/home_page.dart';
 import 'package:event_planner/tabs/love/favorite_page.dart';
 import 'package:event_planner/tabs/map/map_page.dart';
@@ -26,7 +27,9 @@ class _HomeState extends State<Home> {
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context) => AddEventScreen(),));
+        },
         child: const Icon(Icons.add),
       ),
       bottomNavigationBar: Theme(
