@@ -1,4 +1,3 @@
-import 'package:event_planner/core/utils/app_assets.dart';
 import 'package:event_planner/core/utils/app_color.dart';
 import 'package:event_planner/core/utils/app_styles.dart';
 import 'package:flutter/material.dart';
@@ -193,7 +192,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
   Future<void> pickdtime () async{
     TimeOfDay? pickedTime = await showTimePicker(context: context,initialTime: TimeOfDay.now());
     if (pickedTime != null){
-      eventTime = pickedTime.toString().split(" ")[1];
+      eventTime = pickedTime.format(context);
       setState(() {
       });
     }}
