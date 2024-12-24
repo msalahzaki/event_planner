@@ -1,3 +1,4 @@
+import 'package:event_planner/auth/login_page.dart';
 import 'package:event_planner/providers/language_provider.dart';
 import 'package:event_planner/providers/theme_provider.dart';
 import 'package:event_planner/tabs/home.dart';
@@ -13,7 +14,6 @@ void main() {
     providers: [
       ChangeNotifierProvider(create: (context) => LanguageProvider(),),
       ChangeNotifierProvider(create: (context) => ThemeProvider(),),
-
     ],
       child: const MyApp()));
 }
@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
       theme: AppTheme.lighttheme,
       themeMode: themeProvider.theme,
       locale:  Locale(languageProvider.language),
-      home: const Home(),
+      home: const LoginPage(),
     );
   }
 }

@@ -106,10 +106,35 @@ class _LoginPageState extends State<LoginPage> {
               SizedBox(
                 height: size.height * 0.02,
               ),
-              Text(
-                "-------------- or ------------------",
-                style: AppStyles.normal16blue,
-              ),
+              Row(mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Divider with a defined width
+                  Container(
+                    width: size.width * 0.3, // Set a fixed width for the divider
+                    child: Divider(
+                      indent: size.width * 0.02,
+                      endIndent: size.width * 0.02,
+                      thickness: 1,
+                      color: AppColor.primaryLight,
+                    ),
+                  ),
+                  Text(
+                    " or ",
+                    style: AppStyles.normal16blue,
+                  ),
+                  // Another Divider with width defined, endIndent also optional
+                  Container(
+                    width: size.width * 0.3, // Set the width for this divider
+                    child: Divider(
+                      endIndent: size.width * 0.02,
+                      thickness: 1,
+                      color: AppColor.primaryLight,
+                    ),
+                  ),
+                ],
+              )
+
+              ,
               SizedBox(
                 height: size.height * 0.02,
               ),

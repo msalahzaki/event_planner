@@ -36,54 +36,30 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
         ],
       ),
       body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // Category Image
-            Container(
-              margin: const EdgeInsets.symmetric(vertical: 5),
-              height: size.height * .2,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16),
-                image: DecorationImage(
-                    image: AssetImage(AppAssets.Meeting), fit: BoxFit.fill),
-              ),
-            ),
-            Text(
-              "Title ",
-              style: AppStyles.normal24blue,
-            ),
-            SizedBox(
-              height: size.height * .01,
-            ),
-            // Date And Time
-            ListTile(
-              shape: RoundedRectangleBorder(
-                  side: const BorderSide(
-                    color: AppColor.primaryLight,
-                  ),
-                  borderRadius: BorderRadius.circular(15.0)),
-              leading: Container(
-                padding: const EdgeInsets.all(10),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Category Image
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 5),
+                height: size.height * .2,
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    color: AppColor.primaryLight),
-                child: const Icon(
-                  Icons.calendar_month,
-                  color: AppColor.white,
+                  borderRadius: BorderRadius.circular(16),
+                  image: DecorationImage(
+                      image: AssetImage(AppAssets.Meeting), fit: BoxFit.fill),
                 ),
               ),
-              title: Text("21-Novamber - 2024", style: AppStyles.normal16blue),
-              subtitle: Text(
-                "12:12 PM",
-                style: AppStyles.normal16black,
+              Text(
+                "Title ",
+                style: AppStyles.normal24blue,
               ),
-            ),
-            SizedBox(
-              height: size.height * .01,
-            ),
-            //Location Information
-            ListTile(
+              SizedBox(
+                height: size.height * .01,
+              ),
+              // Date And Time
+              ListTile(
                 shape: RoundedRectangleBorder(
                     side: const BorderSide(
                       color: AppColor.primaryLight,
@@ -95,36 +71,63 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                       borderRadius: BorderRadius.circular(8),
                       color: AppColor.primaryLight),
                   child: const Icon(
-                    Icons.my_location_outlined,
+                    Icons.calendar_month,
                     color: AppColor.white,
                   ),
                 ),
-                title: Text(" Cairo , Egypt", style: AppStyles.normal16blue),
-                trailing: const Icon(
-                  Icons.arrow_forward_ios_sharp,
-                  color: AppColor.primaryLight,
-                )),
-            SizedBox(
-              height: size.height * .01,
-            ),
-            // Map
-            Container(
-              height: size.height * .3,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: AppColor.primaryLight),
+                title: Text("21-Novamber - 2024", style: AppStyles.normal16blue),
+                subtitle: Text(
+                  "12:12 PM",
+                  style: AppStyles.normal16black,
+                ),
               ),
-            ),
-            Text(
-              local.description,
-              style: AppStyles.normal16black,
-            ),
-            Text(
-              "event description",
-              style: AppStyles.normal16black,
-            ),
-          ],
+              SizedBox(
+                height: size.height * .01,
+              ),
+              //Location Information
+              ListTile(
+                  shape: RoundedRectangleBorder(
+                      side: const BorderSide(
+                        color: AppColor.primaryLight,
+                      ),
+                      borderRadius: BorderRadius.circular(15.0)),
+                  leading: Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: AppColor.primaryLight),
+                    child: const Icon(
+                      Icons.my_location_outlined,
+                      color: AppColor.white,
+                    ),
+                  ),
+                  title: Text(" Cairo , Egypt", style: AppStyles.normal16blue),
+                  trailing: const Icon(
+                    Icons.arrow_forward_ios_sharp,
+                    color: AppColor.primaryLight,
+                  )),
+              SizedBox(
+                height: size.height * .01,
+              ),
+              // Map
+              Container(
+                height: size.height * .3,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: AppColor.primaryLight),
+                ),
+              ),
+              Text(
+                local.description,
+                style: AppStyles.normal16black,
+              ),
+              Text(
+                "event description",
+                style: AppStyles.normal16black,
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -25,7 +25,7 @@ class _ProfileScreenState extends State<ProfilePage> {
     String selectedTheme = themeProvider.theme == ThemeMode.light ? "Light" : "Dark" ;
      selectedLanguage = languageProvider.language;
     Size size = MediaQuery.of(context).size;
-    return Scaffold(
+    return Scaffold(resizeToAvoidBottomInset: false,
       appBar: AppBar(
         shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(bottomLeft: Radius.circular(40)),)
         ,toolbarHeight: size.height * .15,
