@@ -9,15 +9,15 @@ class ThemeProvider extends ChangeNotifier{
 
 
    ThemeProvider(){
-     getLanguagePrefrences();
-   }
+    setLanguagePrefrences();
+  }
 
 
    void changeTheme(ThemeMode newtheme){
      if(theme != newtheme){
        theme= newtheme;
-       setLanguagePrefrences();
-       notifyListeners();
+      setLanguagePrefrences();
+      notifyListeners();
      }
 
    }
@@ -25,8 +25,7 @@ class ThemeProvider extends ChangeNotifier{
    void setLanguagePrefrences() async{
      final SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString('theme', (theme == ThemeMode.light)? "light" : "dark");
-     print(prefs.getString('theme') ) ;
-   }
+  }
 
    void getLanguagePrefrences () async{
      final SharedPreferences prefs = await SharedPreferences.getInstance();

@@ -5,6 +5,7 @@ import 'package:event_planner/providers/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
+
 import '../../core/utils/app_color.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -25,7 +26,8 @@ class _ProfileScreenState extends State<ProfilePage> {
     String selectedTheme = themeProvider.theme == ThemeMode.light ? "Light" : "Dark" ;
      selectedLanguage = languageProvider.language;
     Size size = MediaQuery.of(context).size;
-    return Scaffold(resizeToAvoidBottomInset: false,
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(bottomLeft: Radius.circular(40)),)
         ,toolbarHeight: size.height * .15,
@@ -120,8 +122,9 @@ class _ProfileScreenState extends State<ProfilePage> {
             const Spacer(),
             ElevatedButton(
               onPressed: () {},
-              style: ButtonStyle(padding:WidgetStateProperty.all(const EdgeInsets.all(15)) ,
-                  backgroundColor: WidgetStateProperty.all(AppColor.red),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColor.red,
+                padding: EdgeInsets.all(15),
               ),
               child: Row(
                 children: [
