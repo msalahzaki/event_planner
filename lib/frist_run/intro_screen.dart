@@ -4,8 +4,9 @@ import 'package:event_planner/core/utils/app_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:introduction_screen/introduction_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import '../core/utils/app_color.dart';
-import '../tabs/home.dart';
 
 class IntroScreen extends StatefulWidget {
   const IntroScreen({super.key});
@@ -63,8 +64,11 @@ class _IntroScreenState extends State<IntroScreen> {
       showNextButton: true,
       showDoneButton: true,
 
-      onDone: () => Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const LoginPage())),
+      onDone: () {
+        setFirstRunPrefrences();
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => const LoginPage()));
+      },
     );
   }
 
@@ -93,5 +97,10 @@ class _IntroScreenState extends State<IntroScreen> {
         ],
       ),
     );
+  }
+
+  void setFirstRunPrefrences() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('firstRun', false);
   }
 }
