@@ -280,7 +280,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
           );
         },
       );
-      eventProvider.changeSelectedcategory(-1);
+      eventProvider.changeSelectedcategory(selectedCategory);
       Navigator.pop(context);
     }
   }

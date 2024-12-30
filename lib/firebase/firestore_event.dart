@@ -13,8 +13,8 @@ class FirestoreEvent {
   }
 
   static Future<void> addEvents(Event event) {
-    var collectionRef = initconnection().doc();
-    event.id = collectionRef.id;
-    return collectionRef.set(event);
+    var docmentRef = initconnection().doc();
+    event.id = docmentRef.id;
+    return docmentRef.set(event);
   }
 }

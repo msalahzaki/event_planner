@@ -129,8 +129,11 @@ class _HomePageState extends State<HomePage> {
           ),
           Expanded(
               child: eventProvider.eventFilteredList.isEmpty
-                  ? const Center(
-                      child: Text("No Item Found"),
+                  ? Center(
+                      child: Text(
+                        "No Item Found",
+                        style: AppStyles.bold20blue,
+                      ),
                     )
                   : ListView.builder(
                       itemCount: eventProvider.eventFilteredList.length,

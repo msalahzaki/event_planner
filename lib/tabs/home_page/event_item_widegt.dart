@@ -82,8 +82,6 @@ class _EventItemWidegtState extends State<EventItemWidegt> {
                     onPressed: () {
                       eventProvider.updateDoc("isFavorite",
                           !widget.event.isFavorite, widget.event.id);
-
-                      setState(() {});
                     },
                     icon: Icon(widget.event.isFavorite
                         ? Icons.favorite
