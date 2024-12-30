@@ -1,25 +1,38 @@
 import 'package:event_planner/core/utils/app_color.dart';
 import 'package:event_planner/core/utils/app_styles.dart';
 import 'package:event_planner/model/category_model.dart';
+import 'package:event_planner/providers/event_provider.dart';
 import 'package:event_planner/tabs/home_page/category_widget.dart';
 import 'package:event_planner/tabs/home_page/event_item_widegt.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+  @override
+  initState() {
+    super.initState();
+  }
+
   List<CategoryModel> categories = Categories.getCategories();
-  int selectedCategory = -1;
+
   @override
   Widget build(BuildContext context) {
     var local = AppLocalizations.of(context)!;
+    var eventProvider = Provider.of<EventProvider>(context);
     Size size = MediaQuery.of(context).size;
+
+    if (eventProvider.eventFilteredList.isEmpty &&
+        eventProvider.selectedCategory == -1) {
+      eventProvider.getEventsByCategory();
+    }
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: size.height * 0.1,
@@ -82,15 +95,14 @@ class _HomePageState extends State<HomePage> {
               children: [
                 InkWell(
                   onTap: () {
-                    selectedCategory = -1;
-                    setState(() {});
+                    eventProvider.changeSelectedcategory(-1);
                   },
                   child: SizedBox(
                     height: double.infinity,
                     child: CategoryWidget(
                       icon: Icons.clear_all,
                       label: "All ",
-                      isSelected: selectedCategory == -1,
+                      isSelected: eventProvider.selectedCategory == -1,
                     ),
                   ),
                 ),
@@ -101,13 +113,12 @@ class _HomePageState extends State<HomePage> {
                     itemBuilder: (context, index) {
                       return InkWell(
                         onTap: () {
-                          selectedCategory = index;
-                          setState(() {});
+                          eventProvider.changeSelectedcategory(index);
                         },
                         child: CategoryWidget(
                           icon: categories[index].icon,
                           label: categories[index].name,
-                          isSelected: index == selectedCategory,
+                          isSelected: index == eventProvider.selectedCategory,
                         ),
                       );
                     },
@@ -117,26 +128,16 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           Expanded(
-            child: ListView(
-              children: [
-                EventItemWidegt(
-                    image: categories[1].image,
-                    date: "22 Dec",
-                    title: "This is a Birthday Party ",
-                    isFavorite: true),
-                EventItemWidegt(
-                    image: categories[2].image,
-                    date: "22 Dec",
-                    title: "Meeting for Updating The Development Method",
-                    isFavorite: true),
-                EventItemWidegt(
-                    image: categories[3].image,
-                    date: "22 Dec",
-                    title: "",
-                    isFavorite: true),
-              ],
-            ),
-          )
+              child: eventProvider.eventFilteredList.isEmpty
+                  ? const Center(
+                      child: Text("No Item Found"),
+                    )
+                  : ListView.builder(
+                      itemCount: eventProvider.eventFilteredList.length,
+                      itemBuilder: (context, index) {
+                        return EventItemWidegt(
+                            event: eventProvider.eventFilteredList[index]);
+                      }))
         ],
       ),
     );

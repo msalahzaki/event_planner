@@ -29,7 +29,6 @@ class ThemeProvider extends ChangeNotifier{
 
    void getLanguagePrefrences () async{
      final SharedPreferences prefs = await SharedPreferences.getInstance();
-     print(prefs.getString('theme') ) ;
      theme =  prefs.getString('theme') == "dark" ? ThemeMode.dark : ThemeMode.light ;
      notifyListeners();
    }

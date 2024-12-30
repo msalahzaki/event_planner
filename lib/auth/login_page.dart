@@ -58,7 +58,7 @@ class _LoginPageState extends State<LoginPage> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => ForgetPasswordPage(),
+                            builder: (context) => const ForgetPasswordPage(),
                           ));
                     },
                     child: Text(
@@ -73,7 +73,11 @@ class _LoginPageState extends State<LoginPage> {
                 width: double.infinity,
                 child: ElevatedButton(
                     onPressed: () {
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home(),));
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const Home(),
+                          ));
                     },
                     child: Text(
                       local.login,
@@ -94,7 +98,7 @@ class _LoginPageState extends State<LoginPage> {
                     onTap: () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => RegisterPage(),
+                          builder: (context) => const RegisterPage(),
                         )),
                     child: Text(
                       local.create_account,
@@ -109,7 +113,7 @@ class _LoginPageState extends State<LoginPage> {
               Row(mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   // Divider with a defined width
-                  Container(
+                  SizedBox(
                     width: size.width * 0.3, // Set a fixed width for the divider
                     child: Divider(
                       indent: size.width * 0.02,
@@ -123,7 +127,7 @@ class _LoginPageState extends State<LoginPage> {
                     style: AppStyles.normal16blue,
                   ),
                   // Another Divider with width defined, endIndent also optional
-                  Container(
+                  SizedBox(
                     width: size.width * 0.3, // Set the width for this divider
                     child: Divider(
                       endIndent: size.width * 0.02,
@@ -163,7 +167,7 @@ class _LoginPageState extends State<LoginPage> {
               SizedBox(
                 height: size.height * 0.03,
               ),
-              LanguageWidget(),
+              const LanguageWidget(),
             ],
           ),
         ),

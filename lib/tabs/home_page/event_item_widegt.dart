@@ -1,36 +1,47 @@
 import 'package:event_planner/core/utils/app_color.dart';
 import 'package:event_planner/core/utils/app_styles.dart';
+import 'package:event_planner/providers/event_provider.dart';
 import 'package:event_planner/tabs/events/event_details_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
-class EventItemWidegt extends StatelessWidget {
-  const EventItemWidegt(
-      {super.key,
-      required this.image,
-      required this.date,
-      required this.title,
-      required this.isFavorite});
+import '../../model/category_model.dart';
+import '../../model/event.dart';
 
-  final String image;
-  final String date;
-  final String title;
-  final bool isFavorite;
+class EventItemWidegt extends StatefulWidget {
+  const EventItemWidegt({super.key, required this.event});
+
+  final Event event;
 
   @override
+  State<EventItemWidegt> createState() => _EventItemWidegtState();
+}
+
+class _EventItemWidegtState extends State<EventItemWidegt> {
+  @override
   Widget build(BuildContext context) {
+    var eventProvider = Provider.of<EventProvider>(context);
+    String day = widget.event.date.day.toString();
+    String month = DateFormat.MMM().format(widget.event.date);
+    List<CategoryModel> categories = Categories.getCategories();
     Size size = MediaQuery.of(context).size;
     return InkWell(
       onTap: () => Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => EventDetailsScreen(),
+            builder: (context) => EventDetailsScreen(
+              event: widget.event,
+            ),
           )),
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         height: size.height * .3,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
-          image: DecorationImage(image: AssetImage(image), fit: BoxFit.fill),
+          image: DecorationImage(
+              image: AssetImage(categories[widget.event.categoryID].image),
+              fit: BoxFit.fill),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -44,7 +55,7 @@ class EventItemWidegt extends StatelessWidget {
                 borderRadius: BorderRadius.circular(6),
               ),
               child: Text(
-                date,
+                "$day \n $month ",
                 style: AppStyles.bold20blue,
                 textAlign: TextAlign.center,
               ),
@@ -64,11 +75,19 @@ class EventItemWidegt extends StatelessWidget {
                 children: [
                   Expanded(
                       child: Text(
-                    title,
+                    widget.event.title,
                     style: AppStyles.bold14black,
                   )),
-                  Icon(
-                    isFavorite ? Icons.favorite : Icons.favorite_border,
+                  IconButton(
+                    onPressed: () {
+                      eventProvider.updateDoc("isFavorite",
+                          !widget.event.isFavorite, widget.event.id);
+
+                      setState(() {});
+                    },
+                    icon: Icon(widget.event.isFavorite
+                        ? Icons.favorite
+                        : Icons.favorite_border),
                     color: AppColor.primaryLight,
                   )
                 ],

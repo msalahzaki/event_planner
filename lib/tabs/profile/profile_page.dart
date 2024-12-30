@@ -124,7 +124,7 @@ class _ProfileScreenState extends State<ProfilePage> {
               onPressed: () {},
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColor.red,
-                padding: EdgeInsets.all(15),
+                padding: const EdgeInsets.all(15),
               ),
               child: Row(
                 children: [

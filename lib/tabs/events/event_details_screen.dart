@@ -1,17 +1,21 @@
-import 'package:event_planner/core/utils/app_assets.dart';
 import 'package:event_planner/core/utils/app_color.dart';
 import 'package:event_planner/core/utils/app_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class EventDetailsScreen extends StatefulWidget {
-  const EventDetailsScreen({super.key});
+import '../../model/category_model.dart';
+import '../../model/event.dart';
 
+class EventDetailsScreen extends StatefulWidget {
+  const EventDetailsScreen({super.key, required this.event});
+
+  final Event event;
   @override
   State<EventDetailsScreen> createState() => _EventDetailsScreenState();
 }
 
 class _EventDetailsScreenState extends State<EventDetailsScreen> {
+  List<CategoryModel> categories = Categories.getCategories();
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -24,7 +28,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
           local.event_details,
           style: AppStyles.normal16blue,
         ),
-        actions: [
+        actions: const [
           Icon(
             Icons.edit,
             color: AppColor.primaryLight,
@@ -48,11 +52,13 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
                   image: DecorationImage(
-                      image: AssetImage(AppAssets.Meeting), fit: BoxFit.fill),
+                      image:
+                          AssetImage(categories[widget.event.categoryID].image),
+                      fit: BoxFit.fill),
                 ),
               ),
               Text(
-                "Title ",
+                widget.event.title,
                 style: AppStyles.normal24blue,
               ),
               SizedBox(
@@ -75,9 +81,10 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                     color: AppColor.white,
                   ),
                 ),
-                title: Text("21-Novamber - 2024", style: AppStyles.normal16blue),
+                title: Text(widget.event.date.toString(),
+                    style: AppStyles.normal16blue),
                 subtitle: Text(
-                  "12:12 PM",
+                  widget.event.time,
                   style: AppStyles.normal16black,
                 ),
               ),
@@ -123,7 +130,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                 style: AppStyles.normal16black,
               ),
               Text(
-                "event description",
+                widget.event.description,
                 style: AppStyles.normal16black,
               ),
             ],

@@ -17,7 +17,7 @@ class IntroScreen extends StatefulWidget {
 
 class _IntroScreenState extends State<IntroScreen> {
   final _introKey = GlobalKey<IntroductionScreenState>();
-  late var local;
+  late AppLocalizations local;
   late Size size;
   @override
   Widget build(BuildContext context) {

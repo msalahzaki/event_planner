@@ -1,7 +1,11 @@
 import 'package:event_planner/core/utils/app_color.dart';
 import 'package:event_planner/core/utils/app_styles.dart';
+import 'package:event_planner/firebase/firestore_event.dart';
+import 'package:event_planner/model/event.dart';
+import 'package:event_planner/providers/event_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 
 import '../../model/category_model.dart';
 import '../home_page/category_widget.dart';
@@ -15,14 +19,17 @@ class AddEventScreen extends StatefulWidget {
 
 class _AddEventScreenState extends State<AddEventScreen> {
   List<CategoryModel> categories = Categories.getCategories();
- String? eventDate ;
+  String? eventDateText;
+
+  late DateTime eventDate;
   int selectedCategory = 0;
   String? eventTime;
 
   TextEditingController eventTitleController = TextEditingController();
   TextEditingController eventDescriptionController = TextEditingController();
   var formkey = GlobalKey<FormState>();
-  var local;
+  late AppLocalizations local;
+  late EventProvider eventProvider;
 
   @override
   initState(){
@@ -31,15 +38,16 @@ class _AddEventScreenState extends State<AddEventScreen> {
 
   @override
   Widget build(BuildContext context) {
+    eventProvider = Provider.of<EventProvider>(context);
     local = AppLocalizations.of(context)!;
-    eventDate ??=local.choose_date ;
+    eventDateText ??= local.choose_date;
     eventTime ??= local.choose_time ;
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        iconTheme: IconThemeData(color: AppColor.primaryLight),
+        iconTheme: const IconThemeData(color: AppColor.primaryLight),
         backgroundColor: AppColor.semiblue,
         centerTitle: true,
         title: Text(
@@ -146,7 +154,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                         pickdate();
                       },
                       child: Text(
-                        eventDate!,
+                        eventDateText!,
                         style: AppStyles.normal16blue,
                       )),
                 ],
@@ -212,7 +220,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
         firstDate: DateTime.now(),
         lastDate: DateTime(2030));
     if (pickeddate != null){
-      eventDate = pickeddate.toString().split(" ")[0];
+      eventDate = pickeddate;
+      eventDateText = pickeddate.toString().split(" ")[0];
       setState(() {
       });
     }}
@@ -228,19 +237,21 @@ class _AddEventScreenState extends State<AddEventScreen> {
   String? titleAndDescriptionValidate(String? text) {
     if (text == null || text.trim().length < 3) {
       return ("Please Enter Valid Event details ");
-    } else
+    } else {
       return null;
+    }
   }
 
   submit() {
     if (formkey.currentState!.validate()) {
-      if (eventDate == null || eventDate!.contains(local.choose_date)) {
+      if (eventDateText == null || eventDateText!.contains(local.choose_date)) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text("please Enter Valid Date"),
             backgroundColor: Colors.red,
           ),
         );
+        return;
       }
       if (eventTime == null || eventTime!.contains(local.choose_time)) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -249,7 +260,28 @@ class _AddEventScreenState extends State<AddEventScreen> {
             backgroundColor: Colors.red,
           ),
         );
+        return;
       }
+
+      FirestoreEvent.addEvents(Event(
+              title: eventTitleController.text,
+              description: eventDescriptionController.text,
+              categoryID: selectedCategory,
+              date: eventDate,
+              time: eventTime!))
+          .timeout(
+        const Duration(milliseconds: 500),
+        onTimeout: () {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Event Added Succesed"),
+              backgroundColor: Colors.green,
+            ),
+          );
+        },
+      );
+      eventProvider.getEventsByCategory();
+      Navigator.pop(context);
     }
   }
 }

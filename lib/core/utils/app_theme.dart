@@ -21,7 +21,7 @@ class AppTheme {
       elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-        padding: EdgeInsets.all(10),
+        padding: const EdgeInsets.all(10),
         backgroundColor: AppColor.primaryLight,
       )),
 
@@ -35,10 +35,10 @@ class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
           enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
-              borderSide: BorderSide(color: AppColor.gray, width: 1)),
+              borderSide: const BorderSide(color: AppColor.gray, width: 1)),
           focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
-              borderSide: BorderSide(color: AppColor.gray, width: 1)),
+              borderSide: const BorderSide(color: AppColor.gray, width: 1)),
           iconColor: AppColor.gray,
           hintStyle: AppStyles.normal16gray,
           prefixIconColor: AppColor.gray,
@@ -75,10 +75,10 @@ class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
           enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
-              borderSide: BorderSide(color: AppColor.white, width: 1)),
+              borderSide: const BorderSide(color: AppColor.white, width: 1)),
           focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
-              borderSide: BorderSide(color: AppColor.white, width: 1)),
+              borderSide: const BorderSide(color: AppColor.white, width: 1)),
           hintStyle: AppStyles.normal16white,
           prefixIconColor: AppColor.white,
           suffixIconColor: AppColor.white));

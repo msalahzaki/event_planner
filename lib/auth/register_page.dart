@@ -34,7 +34,7 @@ class _RegisterPageState extends State<RegisterPage> {
               style: AppStyles.normal20white
                   .copyWith(color: Theme.of(context).colorScheme.secondary),
               decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.person), hintText: local.name),
+                  prefixIcon: const Icon(Icons.person), hintText: local.name),
             ),
             SizedBox(
               height: size.height * 0.015,
@@ -101,7 +101,7 @@ class _RegisterPageState extends State<RegisterPage> {
             SizedBox(
               height: size.height * 0.03,
             ),
-            LanguageWidget(),
+            const LanguageWidget(),
           ],
         ),
       ),
