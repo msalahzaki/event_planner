@@ -15,7 +15,6 @@ class EventProvider extends ChangeNotifier {
         .orderBy('time')
         .get();
     eventList = snap.docs.map((doc) {
-      // FirestoreEvent.initconnection().doc(doc.id).delete();
       return doc.data();
     }).toList();
     eventFilteredList = eventList;
@@ -63,6 +62,12 @@ class EventProvider extends ChangeNotifier {
 
   void changeSelectedcategory(int selectedCategory) {
     this.selectedCategory = selectedCategory;
+    getEventsByCategory();
+  }
+
+  Future<void> deleteEvent(String eventID) async {
+    await FirestoreEvent.initconnection().doc(eventID).delete();
+    getEventsByFavorite();
     getEventsByCategory();
   }
 }
