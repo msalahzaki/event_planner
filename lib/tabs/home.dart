@@ -31,7 +31,7 @@ class _HomeState extends State<Home> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const AddEventScreen(),
+                builder: (context) =>  AddEventScreen(),
               ));
         },
         child: const Icon(Icons.add),

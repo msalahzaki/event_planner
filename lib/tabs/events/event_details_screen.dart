@@ -1,6 +1,7 @@
 import 'package:event_planner/core/utils/app_color.dart';
 import 'package:event_planner/core/utils/app_styles.dart';
 import 'package:event_planner/providers/event_provider.dart';
+import 'package:event_planner/tabs/events/add_event_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
@@ -28,6 +29,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
     var local = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
+        iconTheme:IconThemeData(color: AppColor.primaryLight) ,
         centerTitle: true,
         backgroundColor: AppColor.semiblue,
         title: Text(
@@ -35,9 +37,13 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
           style: AppStyles.normal16blue,
         ),
         actions: [
-          const Icon(
-            Icons.edit,
+            IconButton(
+      icon:  Icon(Icons.edit,),
             color: AppColor.primaryLight,
+
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => AddEventScreen(event: widget.event,),));
+            },
           ),
           IconButton(
             icon: const Icon(Icons.delete),

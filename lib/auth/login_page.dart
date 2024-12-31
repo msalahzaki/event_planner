@@ -6,7 +6,6 @@ import 'package:event_planner/core/utils/app_styles.dart';
 import 'package:event_planner/tabs/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 import '../frist_run/widget/language_widget.dart';
 
 class LoginPage extends StatefulWidget {

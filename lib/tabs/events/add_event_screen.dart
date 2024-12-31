@@ -11,7 +11,8 @@ import '../../model/category_model.dart';
 import '../home_page/category_widget.dart';
 
 class AddEventScreen extends StatefulWidget {
-  const AddEventScreen({super.key});
+  AddEventScreen({super.key, this.event});
+  final Event? event;
 
   @override
   State<AddEventScreen> createState() => _AddEventScreenState();
@@ -20,7 +21,6 @@ class AddEventScreen extends StatefulWidget {
 class _AddEventScreenState extends State<AddEventScreen> {
   List<CategoryModel> categories = Categories.getCategories();
   String? eventDateText;
-
   late DateTime eventDate;
   int selectedCategory = 0;
   String? eventTime;
@@ -31,9 +31,20 @@ class _AddEventScreenState extends State<AddEventScreen> {
   late AppLocalizations local;
   late EventProvider eventProvider;
 
+
+
+
   @override
-  initState(){
-        super.initState();
+  initState() {
+    if (widget.event != null ){
+      eventDateText = widget.event!.date.toString().split(" ")[0];
+      selectedCategory=widget.event!.categoryID;
+      eventTime=widget.event!.time;
+      eventTitleController.text=widget.event!.title;
+      eventDescriptionController.text=widget.event!.description;
+    }
+    super.initState();
+
   }
 
   @override
@@ -41,7 +52,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
     eventProvider = Provider.of<EventProvider>(context);
     local = AppLocalizations.of(context)!;
     eventDateText ??= local.choose_date;
-    eventTime ??= local.choose_time ;
+    eventTime ??= local.choose_time;
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
@@ -51,7 +62,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
         backgroundColor: AppColor.semiblue,
         centerTitle: true,
         title: Text(
-          local.create_event,
+          widget.event==null ? local.create_event : local.edit_event,
           style: AppStyles.normal20blue,
         ),
       ),
@@ -205,8 +216,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
               ),
               ElevatedButton(
                   onPressed: submit,
-                  child: Text(
-                    local.add_event,
+                  child: Text(widget.event==null ?
+                  local.add_event : local.update_event,
                     style: AppStyles.bold20white,
                   ))
             ],
@@ -215,24 +226,28 @@ class _AddEventScreenState extends State<AddEventScreen> {
       ),
     );
   }
-  Future<void> pickdate () async{
-    DateTime? pickeddate = await showDatePicker(context: context,initialDate: DateTime.now(),
+
+  Future<void> pickdate() async {
+    DateTime? pickeddate = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
         firstDate: DateTime.now(),
         lastDate: DateTime(2030));
-    if (pickeddate != null){
+    if (pickeddate != null) {
       eventDate = pickeddate;
       eventDateText = pickeddate.toString().split(" ")[0];
-      setState(() {
-      });
-    }}
+      setState(() {});
+    }
+  }
 
-  Future<void> pickdtime () async{
-    TimeOfDay? pickedTime = await showTimePicker(context: context,initialTime: TimeOfDay.now());
-    if (pickedTime != null){
+  Future<void> pickdtime() async {
+    TimeOfDay? pickedTime =
+        await showTimePicker(context: context, initialTime: TimeOfDay.now());
+    if (pickedTime != null) {
       eventTime = pickedTime.format(context);
-      setState(() {
-      });
-    }}
+      setState(() {});
+    }
+  }
 
   String? titleAndDescriptionValidate(String? text) {
     if (text == null || text.trim().length < 3) {
@@ -284,4 +299,6 @@ class _AddEventScreenState extends State<AddEventScreen> {
       Navigator.pop(context);
     }
   }
+
+
 }
