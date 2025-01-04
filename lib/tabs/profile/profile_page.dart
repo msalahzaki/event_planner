@@ -1,3 +1,4 @@
+import 'package:event_planner/auth/login_page.dart';
 import 'package:event_planner/core/utils/app_assets.dart';
 import 'package:event_planner/core/utils/app_styles.dart';
 import 'package:event_planner/providers/language_provider.dart';
@@ -7,6 +8,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/utils/app_color.dart';
+import '../../providers/user_provider.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -18,10 +20,13 @@ class ProfilePage extends StatefulWidget {
 class _ProfileScreenState extends State<ProfilePage> {
   late String selectedLanguage ;
  late String selectedTheme ;
+
+  late UserProvider userProvider;
   @override
   Widget build(BuildContext context) {
     var languageProvider = Provider.of<LanguageProvider>(context);
     var themeProvider = Provider.of<ThemeProvider>(context);
+    userProvider = Provider.of<UserProvider>(context);
     var local =AppLocalizations.of(context)! ;
     String selectedTheme = themeProvider.theme == ThemeMode.light ? "Light" : "Dark" ;
      selectedLanguage = languageProvider.language;
@@ -38,8 +43,11 @@ class _ProfileScreenState extends State<ProfilePage> {
             const SizedBox(width: 20,),
              Column(crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("John Safwat",style: AppStyles.bold24white,),
-                Text("John Safwat@gamil.com",style: AppStyles.normal16white),
+                Text(
+                  userProvider.user!.name,
+                  style: AppStyles.bold24white,
+                ),
+                Text(userProvider.user!.email, style: AppStyles.normal16white),
               ],
             )
           ],
@@ -121,7 +129,13 @@ class _ProfileScreenState extends State<ProfilePage> {
             ),
             const Spacer(),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const LoginPage(),
+                    ));
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColor.red,
                 padding: const EdgeInsets.all(15),

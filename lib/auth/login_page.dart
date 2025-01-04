@@ -226,7 +226,7 @@ class _LoginPageState extends State<LoginPage> {
             FirebaseAuthuntace.credential.user!.uid);
         userProvider.changeUser(user!);
         eventProvider.changeSelectedcategory(-1, user.uID);
-        Navigator.push(
+        Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => const Home()));
       }
 

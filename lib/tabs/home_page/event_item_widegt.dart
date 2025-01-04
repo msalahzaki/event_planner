@@ -31,13 +31,19 @@ class _EventItemWidegtState extends State<EventItemWidegt> {
     List<CategoryModel> categories = Categories.getCategories(context);
     Size size = MediaQuery.of(context).size;
     return InkWell(
-      onTap: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => EventDetailsScreen(
-              event: widget.event,
-            ),
-          )),
+      onTap: () {
+        eventProvider
+            .getEventsById(userProvider.user!.uID, widget.event.id)
+            .then((_) {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => EventDetailsScreen(
+                  eventID: widget.event.id,
+                ),
+              ));
+        });
+      },
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         height: size.height * .3,

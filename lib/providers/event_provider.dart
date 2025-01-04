@@ -8,9 +8,10 @@ class EventProvider extends ChangeNotifier {
   List<Event> eventFilteredList = [];
   List<Event> eventFavoriteList = [];
   int selectedCategory = -1;
+  Event? event;
 
   Future<void> getAllEvents(String userID) async {
-    var snap = await FirestoreEvent.initconnection(userID)
+    var snap = await FirestoreEvent.initEventconnection(userID)
         .orderBy('date')
         .orderBy('time')
         .get();
@@ -25,7 +26,7 @@ class EventProvider extends ChangeNotifier {
     if (selectedCategory == -1) {
       getAllEvents(userID);
     } else {
-      var snap = await FirestoreEvent.initconnection(userID)
+      var snap = await FirestoreEvent.initEventconnection(userID)
           .where("categoryID", isEqualTo: selectedCategory)
           .orderBy('date')
           .orderBy('time')
@@ -38,7 +39,7 @@ class EventProvider extends ChangeNotifier {
   }
 
   Future<void> getEventsByFavorite(String userID) async {
-    var snap = await FirestoreEvent.initconnection(userID)
+    var snap = await FirestoreEvent.initEventconnection(userID)
         .where("isFavorite", isEqualTo: true)
         .orderBy('date')
         .orderBy('time')
@@ -49,8 +50,15 @@ class EventProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> getEventsById(String userID, String eventID) async {
+    var snap =
+        await FirestoreEvent.initEventconnection(userID).doc(eventID).get();
+    event = snap.data();
+    notifyListeners();
+  }
+
   void updateDoc(String key, dynamic newValue, String id, String userID) async {
-    await FirestoreEvent.initconnection(userID)
+    await FirestoreEvent.initEventconnection(userID)
         .doc(id)
         .update({key: newValue}).timeout(const Duration(seconds: 1),
             onTimeout: () {
@@ -66,7 +74,7 @@ class EventProvider extends ChangeNotifier {
   }
 
   Future<void> deleteEvent(String eventID, String userID) async {
-    await FirestoreEvent.initconnection(userID).doc(eventID).delete();
+    await FirestoreEvent.initEventconnection(userID).doc(eventID).delete();
     getEventsByFavorite(userID);
     getEventsByCategory(userID);
   }

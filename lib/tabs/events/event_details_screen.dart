@@ -1,7 +1,7 @@
 import 'package:event_planner/core/utils/app_color.dart';
 import 'package:event_planner/core/utils/app_styles.dart';
 import 'package:event_planner/providers/event_provider.dart';
-import 'package:event_planner/tabs/events/add_event_screen.dart';
+import 'package:event_planner/tabs/events/add_Edit_event_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
@@ -12,24 +12,33 @@ import '../../model/event.dart';
 import '../../providers/user_provider.dart';
 
 class EventDetailsScreen extends StatefulWidget {
-  const EventDetailsScreen({super.key, required this.event});
+  const EventDetailsScreen({super.key, required this.eventID});
 
-  final Event event;
+  final String eventID;
   @override
   State<EventDetailsScreen> createState() => _EventDetailsScreenState();
 }
 
 class _EventDetailsScreenState extends State<EventDetailsScreen> {
   late EventProvider eventProvider;
-
+  late Event event;
   late List<CategoryModel> categories;
-
   late UserProvider userProvider;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    userProvider = Provider.of<UserProvider>(context);
-    categories = Categories.getCategories(context);
     eventProvider = Provider.of<EventProvider>(context);
+    userProvider = Provider.of<UserProvider>(context);
+    if (eventProvider.event == null) {
+      eventProvider.getEventsById(userProvider.user!.uID, widget.eventID);
+    }
+    event = eventProvider.event!;
+    categories = Categories.getCategories(context);
     Size size = MediaQuery.of(context).size;
     var local = AppLocalizations.of(context)!;
     return Scaffold(
@@ -49,7 +58,13 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
             color: AppColor.primaryLight,
 
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => AddEventScreen(event: widget.event,),));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AddEditEventScreen(
+                      event: event,
+                    ),
+                  ));
             },
           ),
           IconButton(
@@ -74,13 +89,12 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
                   image: DecorationImage(
-                      image:
-                          AssetImage(categories[widget.event.categoryID].image),
+                      image: AssetImage(categories[event.categoryID].image),
                       fit: BoxFit.fill),
                 ),
               ),
               Text(
-                widget.event.title,
+                event.title,
                 style: AppStyles.normal24blue,
               ),
               SizedBox(
@@ -103,11 +117,10 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                     color: AppColor.white,
                   ),
                 ),
-                title: Text(
-                    DateFormat('dd MMMM yyyy').format(widget.event.date),
+                title: Text(DateFormat('dd MMMM yyyy').format(event.date),
                     style: AppStyles.normal16blue),
                 subtitle: Text(
-                  widget.event.time,
+                  event.time,
                   style: AppStyles.normal16black,
                 ),
               ),
@@ -153,7 +166,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                 style: AppStyles.normal16black,
               ),
               Text(
-                widget.event.description,
+                event.description,
                 style: AppStyles.normal16black,
               ),
             ],
@@ -181,7 +194,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
               onPressed: () {
                 Navigator.of(context).pop();
                 eventProvider
-                    .deleteEvent(widget.event.id, userProvider.user!.uID)
+                    .deleteEvent(event.id, userProvider.user!.uID)
                     .timeout(
                   Durations.short1,
                   onTimeout: () {

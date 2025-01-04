@@ -1,4 +1,4 @@
-import 'package:event_planner/tabs/events/add_event_screen.dart';
+import 'package:event_planner/tabs/events/add_Edit_event_screen.dart';
 import 'package:event_planner/tabs/home_page/home_page.dart';
 import 'package:event_planner/tabs/love/favorite_page.dart';
 import 'package:event_planner/tabs/map/map_page.dart';
@@ -31,7 +31,7 @@ class _HomeState extends State<Home> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const AddEventScreen(),
+                builder: (context) => const AddEditEventScreen(),
               ));
         },
         child: const Icon(Icons.add),

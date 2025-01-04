@@ -11,15 +11,15 @@ import '../../model/category_model.dart';
 import '../../providers/user_provider.dart';
 import '../home_page/category_widget.dart';
 
-class AddEventScreen extends StatefulWidget {
-  const AddEventScreen({super.key, this.event});
+class AddEditEventScreen extends StatefulWidget {
+  const AddEditEventScreen({super.key, this.event});
   final Event? event;
 
   @override
-  State<AddEventScreen> createState() => _AddEventScreenState();
+  State<AddEditEventScreen> createState() => _AddEventScreenState();
 }
 
-class _AddEventScreenState extends State<AddEventScreen> {
+class _AddEventScreenState extends State<AddEditEventScreen> {
   late List<CategoryModel> categories;
   String? eventDateText;
   late DateTime eventDate;
@@ -339,6 +339,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
         backgroundColor: Colors.green,
       ));
       eventProvider.changeSelectedcategory(-1, userProvider.user!.uID);
+      eventProvider.getEventsById(userProvider.user!.uID, id);
       Navigator.pop(context);
     } catch (exception) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(

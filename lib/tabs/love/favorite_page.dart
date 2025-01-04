@@ -18,7 +18,7 @@ class FavoritePage extends StatefulWidget {
 class _FavoritePageState extends State<FavoritePage> {
   String search = '';
 
-  var userProvider;
+  late UserProvider userProvider;
   @override
   Widget build(BuildContext context) {
     userProvider = Provider.of<UserProvider>(context);

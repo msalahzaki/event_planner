@@ -173,7 +173,7 @@ class _RegisterPageState extends State<RegisterPage> {
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => LoginPage(),
+              builder: (context) => const LoginPage(),
             ));
       } else {
         CustomDailog.showMessageDailog(context,

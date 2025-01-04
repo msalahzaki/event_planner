@@ -2,6 +2,8 @@ import 'package:event_planner/core/utils/app_color.dart';
 import 'package:event_planner/core/utils/app_styles.dart';
 import 'package:event_planner/model/category_model.dart';
 import 'package:event_planner/providers/event_provider.dart';
+import 'package:event_planner/providers/language_provider.dart';
+import 'package:event_planner/providers/theme_provider.dart';
 import 'package:event_planner/tabs/home_page/category_widget.dart';
 import 'package:event_planner/tabs/home_page/event_item_widegt.dart';
 import 'package:flutter/material.dart';
@@ -26,9 +28,15 @@ class _HomePageState extends State<HomePage> {
   late List<CategoryModel> categories;
   late UserProvider userProvider;
 
+  late ThemeProvider themeProvider;
+
+  late LanguageProvider languageProvider;
+
   @override
   Widget build(BuildContext context) {
     userProvider = Provider.of<UserProvider>(context);
+    themeProvider = Provider.of<ThemeProvider>(context);
+    languageProvider = Provider.of<LanguageProvider>(context);
     categories = Categories.getCategories(context);
     var local = AppLocalizations.of(context)!;
     var eventProvider = Provider.of<EventProvider>(context);
@@ -66,22 +74,42 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
         actions: [
-          const Icon(
-            Icons.sunny,
-            color: AppColor.white,
+          IconButton(
+            icon: Icon(
+              themeProvider.theme == ThemeMode.light
+                  ? Icons.sunny
+                  : Icons.nightlight,
+              color: AppColor.white,
+            ),
+            onPressed: () {
+              themeProvider.changeTheme(themeProvider.theme == ThemeMode.light
+                  ? ThemeMode.dark
+                  : ThemeMode.light);
+
+              setState(() {});
+            },
           ),
           SizedBox(
             width: size.width * 0.02,
           ),
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: AppColor.semiblue,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Text(
-              "EN",
-              style: AppStyles.bold14blue,
+          InkWell(
+            onTap: () {
+              languageProvider.language == "en"
+                  ? languageProvider.changeLanguage(language: "ar")
+                  : languageProvider.changeLanguage(language: "en");
+
+              setState(() {});
+            },
+            child: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: AppColor.semiblue,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                languageProvider.language.toUpperCase(),
+                style: AppStyles.bold14blue,
+              ),
             ),
           )
         ],
@@ -138,7 +166,7 @@ class _HomePageState extends State<HomePage> {
               child: eventProvider.eventFilteredList.isEmpty
                   ? Center(
                       child: Text(
-                        "No Item Found",
+                        local.no_Item_Found,
                         style: AppStyles.bold20blue,
                       ),
                     )
