@@ -24,7 +24,7 @@ class _EventItemWidegtState extends State<EventItemWidegt> {
     var eventProvider = Provider.of<EventProvider>(context);
     String day = widget.event.date.day.toString();
     String month = DateFormat.MMM().format(widget.event.date);
-    List<CategoryModel> categories = Categories.getCategories();
+    List<CategoryModel> categories = Categories.getCategories(context);
     Size size = MediaQuery.of(context).size;
     return InkWell(
       onTap: () => Navigator.push(

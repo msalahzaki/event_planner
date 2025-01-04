@@ -11,7 +11,7 @@ import '../../model/category_model.dart';
 import '../home_page/category_widget.dart';
 
 class AddEventScreen extends StatefulWidget {
-  AddEventScreen({super.key, this.event});
+  const AddEventScreen({super.key, this.event});
   final Event? event;
 
   @override
@@ -19,7 +19,7 @@ class AddEventScreen extends StatefulWidget {
 }
 
 class _AddEventScreenState extends State<AddEventScreen> {
-  List<CategoryModel> categories = Categories.getCategories();
+  late List<CategoryModel> categories;
   String? eventDateText;
   late DateTime eventDate;
   int selectedCategory = 0;
@@ -32,23 +32,21 @@ class _AddEventScreenState extends State<AddEventScreen> {
   late EventProvider eventProvider;
 
 
-
-
   @override
   initState() {
-    if (widget.event != null ){
+    if (widget.event != null) {
       eventDateText = widget.event!.date.toString().split(" ")[0];
-      selectedCategory=widget.event!.categoryID;
-      eventTime=widget.event!.time;
-      eventTitleController.text=widget.event!.title;
-      eventDescriptionController.text=widget.event!.description;
+      selectedCategory = widget.event!.categoryID;
+      eventTime = widget.event!.time;
+      eventTitleController.text = widget.event!.title;
+      eventDescriptionController.text = widget.event!.description;
     }
     super.initState();
-
   }
 
   @override
   Widget build(BuildContext context) {
+    categories = Categories.getCategories(context);
     eventProvider = Provider.of<EventProvider>(context);
     local = AppLocalizations.of(context)!;
     eventDateText ??= local.choose_date;
@@ -62,7 +60,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
         backgroundColor: AppColor.semiblue,
         centerTitle: true,
         title: Text(
-          widget.event==null ? local.create_event : local.edit_event,
+          widget.event == null ? local.create_event : local.edit_event,
           style: AppStyles.normal20blue,
         ),
       ),
@@ -215,9 +213,9 @@ class _AddEventScreenState extends State<AddEventScreen> {
                 height: size.height * .01,
               ),
               ElevatedButton(
-                  onPressed: submit,
-                  child: Text(widget.event==null ?
-                  local.add_event : local.update_event,
+                  onPressed: widget.event == null ? submit : update,
+                  child: Text(
+                    widget.event == null ? local.add_event : local.update_event,
                     style: AppStyles.bold20white,
                   ))
             ],
@@ -257,7 +255,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
     }
   }
 
-  submit() {
+  bool isValidData() {
     if (formkey.currentState!.validate()) {
       if (eventDateText == null || eventDateText!.contains(local.choose_date)) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -266,7 +264,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
             backgroundColor: Colors.red,
           ),
         );
-        return;
+        return false;
       }
       if (eventTime == null || eventTime!.contains(local.choose_time)) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -275,30 +273,74 @@ class _AddEventScreenState extends State<AddEventScreen> {
             backgroundColor: Colors.red,
           ),
         );
-        return;
+        return false;
+      }
+      return true;
+    }
+    return false;
+  }
+
+  submit() {
+    if (!isValidData()) return;
+    FirestoreEvent.addEvents(Event(
+            title: eventTitleController.text,
+            description: eventDescriptionController.text,
+            categoryID: selectedCategory,
+            date: eventDate,
+            time: eventTime!))
+        .timeout(
+      const Duration(milliseconds: 500),
+      onTimeout: () {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Event Added Succesed"),
+            backgroundColor: Colors.green,
+          ),
+        );
+      },
+    );
+    eventProvider.changeSelectedcategory(-1);
+    Navigator.pop(context);
+  }
+
+  update() {
+    if (!isValidData()) return;
+    String id = widget.event!.id;
+    try {
+      if (eventDateText != widget.event!.date.toString().split(" ")[0]) {
+        eventProvider.updateDoc("date", eventDate.millisecondsSinceEpoch, id);
       }
 
-      FirestoreEvent.addEvents(Event(
-              title: eventTitleController.text,
-              description: eventDescriptionController.text,
-              categoryID: selectedCategory,
-              date: eventDate,
-              time: eventTime!))
-          .timeout(
-        const Duration(milliseconds: 500),
-        onTimeout: () {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text("Event Added Succesed"),
-              backgroundColor: Colors.green,
-            ),
-          );
-        },
-      );
-      eventProvider.changeSelectedcategory(selectedCategory);
+      if (selectedCategory != widget.event!.categoryID) {
+        eventProvider.updateDoc("categoryID", selectedCategory, id);
+      }
+
+      if (eventTime != widget.event!.time) {
+        eventProvider.updateDoc("time", eventTime, id);
+      }
+
+      if (eventTitleController.text != widget.event!.title) {
+        eventProvider.updateDoc("title", eventTitleController.text, id);
+      }
+
+      if (eventDescriptionController.text != widget.event!.description) {
+        eventProvider.updateDoc(
+            "description", eventDescriptionController.text, id);
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text("Event Edited "),
+        backgroundColor: Colors.green,
+      ));
+      eventProvider.changeSelectedcategory(-1);
       Navigator.pop(context);
+    } catch (exception) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Event Add Error  $exception"),
+        backgroundColor: Colors.red,
+      ));
     }
   }
 
-
 }
+

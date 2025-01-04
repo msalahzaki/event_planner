@@ -61,7 +61,7 @@ class _FavoritePageState extends State<FavoritePage> {
                     return EventItemWidegt(
                         event: provider.eventFavoriteList[index]);
                   } else {
-                    return SizedBox();
+                    return const SizedBox();
                   }
                 },
               ),

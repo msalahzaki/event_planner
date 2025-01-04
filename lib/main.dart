@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:event_planner/auth/login_page.dart';
 import 'package:event_planner/providers/event_provider.dart';
 import 'package:event_planner/providers/language_provider.dart';
@@ -19,7 +18,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  await FirebaseFirestore.instance.disableNetwork();
+  // await FirebaseFirestore.instance.disableNetwork();
   runApp(MultiProvider(providers: [
       ChangeNotifierProvider(create: (context) => LanguageProvider(),),
       ChangeNotifierProvider(create: (context) => ThemeProvider(),),

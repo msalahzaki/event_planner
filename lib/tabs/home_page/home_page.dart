@@ -9,7 +9,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({super.key});
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -21,10 +21,11 @@ class _HomePageState extends State<HomePage> {
     super.initState();
   }
 
-  List<CategoryModel> categories = Categories.getCategories();
+  late List<CategoryModel> categories;
 
   @override
   Widget build(BuildContext context) {
+    categories = Categories.getCategories(context);
     var local = AppLocalizations.of(context)!;
     var eventProvider = Provider.of<EventProvider>(context);
     Size size = MediaQuery.of(context).size;

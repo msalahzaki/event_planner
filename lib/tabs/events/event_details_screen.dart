@@ -21,15 +21,16 @@ class EventDetailsScreen extends StatefulWidget {
 class _EventDetailsScreenState extends State<EventDetailsScreen> {
   late EventProvider eventProvider;
 
-  List<CategoryModel> categories = Categories.getCategories();
+  late List<CategoryModel> categories;
   @override
   Widget build(BuildContext context) {
+    categories = Categories.getCategories(context);
     eventProvider = Provider.of<EventProvider>(context);
     Size size = MediaQuery.of(context).size;
     var local = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        iconTheme:IconThemeData(color: AppColor.primaryLight) ,
+        iconTheme: const IconThemeData(color: AppColor.primaryLight),
         centerTitle: true,
         backgroundColor: AppColor.semiblue,
         title: Text(
@@ -38,7 +39,9 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
         ),
         actions: [
             IconButton(
-      icon:  Icon(Icons.edit,),
+            icon: const Icon(
+              Icons.edit,
+            ),
             color: AppColor.primaryLight,
 
             onPressed: () {

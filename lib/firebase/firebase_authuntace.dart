@@ -1,6 +1,5 @@
-
-/*
-
+import 'package:event_planner/firebase/firestore_user.dart';
+import 'package:event_planner/model/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class FirebaseAuthuntace {
@@ -17,37 +16,56 @@ class FirebaseAuthuntace {
   });
 }
 
-void createAccountByEmail(String emailAddress , String password)async{
-  try {
+ static Future<String?> createAccountByEmail(
+      {required String emailAddress,
+      required String password,
+      required String name}) async {
+    try {
     final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
       email: emailAddress,
       password: password,
     );
-  } on FirebaseAuthException catch (e) {
-    if (e.code == 'weak-password') {
-      print('The password provided is too weak.');
-    } else if (e.code == 'email-already-in-use') {
-      print('The account already exists for that email.');
-    }
-  } catch (e) {
-    print(e);
-  }
-}
 
-void signInWithEmail(String emailAddress , String password) async{
-  try {
+      MyUser user =
+          MyUser(uID: credential.user!.uid, name: name, email: emailAddress);
+      FirestoreUser.addUser(user);
+    } on FirebaseAuthException catch (e) {
+    if (e.code == 'weak-password') {
+        return 'The password provided is too weak.';
+      } else if (e.code == 'email-already-in-use') {
+        return 'The account already exists for that email.';
+      } else {
+        return e.code;
+      }
+  } catch (e) {
+      return e.toString();
+    }
+
+    return null;
+  }
+
+  static Future<String?> signInWithEmail(
+      String emailAddress, String password) async {
+    String message = "yyyyyyyy";
+    try {
     final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: emailAddress,
         password: password
     );
-  } on FirebaseAuthException catch (e) {
-    if (e.code == 'user-not-found') {
-      print('No user found for that email.');
-    } else if (e.code == 'wrong-password') {
-      print('Wrong password provided for that user.');
+      return null;
     }
+    //  on FirebaseAuthException catch (e) {
+    //   if (e.code == 'user-not-found') {
+    //     message='No user found for that email.';
+    //   } else if (e.code == 'wrong-password') {
+    //     message='Wrong password provided for that user.';
+    //   }
+    // }
+    catch (e) {
+      message = e.toString();
+    }
+    return message;
   }
-}
 
 void logout() async{
   await FirebaseAuth.instance.signOut();
@@ -55,4 +73,3 @@ void logout() async{
 
 }
 
-*/

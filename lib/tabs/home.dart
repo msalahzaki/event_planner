@@ -16,7 +16,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   int currentIndex = 0;
   List<Widget> tab = [
-    HomePage(),
+    const HomePage(),
     const MapPage(),
     const FavoritePage(),
     const ProfilePage()
@@ -31,7 +31,7 @@ class _HomeState extends State<Home> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) =>  AddEventScreen(),
+                builder: (context) => const AddEventScreen(),
               ));
         },
         child: const Icon(Icons.add),
