@@ -8,6 +8,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
 import '../../model/category_model.dart';
+import '../../providers/user_provider.dart';
 import '../home_page/category_widget.dart';
 
 class AddEventScreen extends StatefulWidget {
@@ -30,7 +31,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
   var formkey = GlobalKey<FormState>();
   late AppLocalizations local;
   late EventProvider eventProvider;
-
+  late UserProvider userProvider;
 
   @override
   initState() {
@@ -48,6 +49,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
   Widget build(BuildContext context) {
     categories = Categories.getCategories(context);
     eventProvider = Provider.of<EventProvider>(context);
+    userProvider = Provider.of<UserProvider>(context);
     local = AppLocalizations.of(context)!;
     eventDateText ??= local.choose_date;
     eventTime ??= local.choose_time;
@@ -287,7 +289,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
             description: eventDescriptionController.text,
             categoryID: selectedCategory,
             date: eventDate,
-            time: eventTime!))
+                time: eventTime!),
+            userProvider.user!.uID)
         .timeout(
       const Duration(milliseconds: 500),
       onTimeout: () {
@@ -299,7 +302,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
         );
       },
     );
-    eventProvider.changeSelectedcategory(-1);
+    eventProvider.changeSelectedcategory(-1, userProvider.user!.uID);
     Navigator.pop(context);
   }
 
@@ -308,31 +311,34 @@ class _AddEventScreenState extends State<AddEventScreen> {
     String id = widget.event!.id;
     try {
       if (eventDateText != widget.event!.date.toString().split(" ")[0]) {
-        eventProvider.updateDoc("date", eventDate.millisecondsSinceEpoch, id);
+        eventProvider.updateDoc("date", eventDate.millisecondsSinceEpoch, id,
+            userProvider.user!.uID);
       }
 
       if (selectedCategory != widget.event!.categoryID) {
-        eventProvider.updateDoc("categoryID", selectedCategory, id);
+        eventProvider.updateDoc(
+            "categoryID", selectedCategory, id, userProvider.user!.uID);
       }
 
       if (eventTime != widget.event!.time) {
-        eventProvider.updateDoc("time", eventTime, id);
+        eventProvider.updateDoc("time", eventTime, id, userProvider.user!.uID);
       }
 
       if (eventTitleController.text != widget.event!.title) {
-        eventProvider.updateDoc("title", eventTitleController.text, id);
+        eventProvider.updateDoc(
+            "title", eventTitleController.text, id, userProvider.user!.uID);
       }
 
       if (eventDescriptionController.text != widget.event!.description) {
-        eventProvider.updateDoc(
-            "description", eventDescriptionController.text, id);
+        eventProvider.updateDoc("description", eventDescriptionController.text,
+            id, userProvider.user!.uID);
       }
 
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text("Event Edited "),
         backgroundColor: Colors.green,
       ));
-      eventProvider.changeSelectedcategory(-1);
+      eventProvider.changeSelectedcategory(-1, userProvider.user!.uID);
       Navigator.pop(context);
     } catch (exception) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(

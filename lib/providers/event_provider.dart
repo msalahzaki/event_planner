@@ -9,8 +9,8 @@ class EventProvider extends ChangeNotifier {
   List<Event> eventFavoriteList = [];
   int selectedCategory = -1;
 
-  Future<void> getAllEvents() async {
-    var snap = await FirestoreEvent.initconnection()
+  Future<void> getAllEvents(String userID) async {
+    var snap = await FirestoreEvent.initconnection(userID)
         .orderBy('date')
         .orderBy('time')
         .get();
@@ -21,11 +21,11 @@ class EventProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getEventsByCategory() async {
+  Future<void> getEventsByCategory(String userID) async {
     if (selectedCategory == -1) {
-      getAllEvents();
+      getAllEvents(userID);
     } else {
-      var snap = await FirestoreEvent.initconnection()
+      var snap = await FirestoreEvent.initconnection(userID)
           .where("categoryID", isEqualTo: selectedCategory)
           .orderBy('date')
           .orderBy('time')
@@ -37,8 +37,8 @@ class EventProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> getEventsByFavorite() async {
-    var snap = await FirestoreEvent.initconnection()
+  Future<void> getEventsByFavorite(String userID) async {
+    var snap = await FirestoreEvent.initconnection(userID)
         .where("isFavorite", isEqualTo: true)
         .orderBy('date')
         .orderBy('time')
@@ -49,25 +49,25 @@ class EventProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateDoc(String key, dynamic newValue, String id) async {
-    await FirestoreEvent.initconnection()
+  void updateDoc(String key, dynamic newValue, String id, String userID) async {
+    await FirestoreEvent.initconnection(userID)
         .doc(id)
         .update({key: newValue}).timeout(const Duration(seconds: 1),
             onTimeout: () {
       print("sucess");
     }).catchError((error) => print("Failed to update user: $error"));
-    getEventsByFavorite();
-    getEventsByCategory();
+    getEventsByFavorite(userID);
+    getEventsByCategory(userID);
   }
 
-  void changeSelectedcategory(int selectedCategory) {
+  void changeSelectedcategory(int selectedCategory, String userID) {
     this.selectedCategory = selectedCategory;
-    getEventsByCategory();
+    getEventsByCategory(userID);
   }
 
-  Future<void> deleteEvent(String eventID) async {
-    await FirestoreEvent.initconnection().doc(eventID).delete();
-    getEventsByFavorite();
-    getEventsByCategory();
+  Future<void> deleteEvent(String eventID, String userID) async {
+    await FirestoreEvent.initconnection(userID).doc(eventID).delete();
+    getEventsByFavorite(userID);
+    getEventsByCategory(userID);
   }
 }

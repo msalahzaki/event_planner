@@ -3,8 +3,8 @@ import 'package:event_planner/model/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class FirebaseAuthuntace {
-
- Future<void> currentUserState() async {
+  static late UserCredential credential;
+  Future<void> currentUserState() async {
   FirebaseAuth.instance
       .authStateChanges()
       .listen((User? user) {
@@ -21,8 +21,8 @@ class FirebaseAuthuntace {
       required String password,
       required String name}) async {
     try {
-    final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-      email: emailAddress,
+      credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: emailAddress,
       password: password,
     );
 
@@ -48,8 +48,8 @@ class FirebaseAuthuntace {
       String emailAddress, String password) async {
     String message = "yyyyyyyy";
     try {
-    final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: emailAddress,
+      credential = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: emailAddress,
         password: password
     );
       return null;

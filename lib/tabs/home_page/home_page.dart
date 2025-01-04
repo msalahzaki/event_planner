@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
+import '../../providers/user_provider.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -22,9 +24,11 @@ class _HomePageState extends State<HomePage> {
   }
 
   late List<CategoryModel> categories;
+  late UserProvider userProvider;
 
   @override
   Widget build(BuildContext context) {
+    userProvider = Provider.of<UserProvider>(context);
     categories = Categories.getCategories(context);
     var local = AppLocalizations.of(context)!;
     var eventProvider = Provider.of<EventProvider>(context);
@@ -32,7 +36,7 @@ class _HomePageState extends State<HomePage> {
 
     if (eventProvider.eventFilteredList.isEmpty &&
         eventProvider.selectedCategory == -1) {
-      eventProvider.getEventsByCategory();
+      eventProvider.getEventsByCategory(userProvider.user!.uID);
     }
     return Scaffold(
       appBar: AppBar(
@@ -46,7 +50,7 @@ class _HomePageState extends State<HomePage> {
               style: AppStyles.normal14white,
             ),
             Text(
-              "Mohamed Salah",
+              userProvider.user!.name,
               style: AppStyles.bold24white,
             ),
             Row(children: [
@@ -96,7 +100,8 @@ class _HomePageState extends State<HomePage> {
               children: [
                 InkWell(
                   onTap: () {
-                    eventProvider.changeSelectedcategory(-1);
+                    eventProvider.changeSelectedcategory(
+                        -1, userProvider.user!.uID);
                   },
                   child: SizedBox(
                     height: double.infinity,
@@ -114,7 +119,8 @@ class _HomePageState extends State<HomePage> {
                     itemBuilder: (context, index) {
                       return InkWell(
                         onTap: () {
-                          eventProvider.changeSelectedcategory(index);
+                          eventProvider.changeSelectedcategory(
+                              index, userProvider.user!.uID);
                         },
                         child: CategoryWidget(
                           icon: categories[index].icon,

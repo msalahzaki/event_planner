@@ -5,6 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/event_provider.dart';
+import '../../providers/user_provider.dart';
 import '../home_page/event_item_widegt.dart';
 
 class FavoritePage extends StatefulWidget {
@@ -16,12 +17,15 @@ class FavoritePage extends StatefulWidget {
 
 class _FavoritePageState extends State<FavoritePage> {
   String search = '';
+
+  var userProvider;
   @override
   Widget build(BuildContext context) {
+    userProvider = Provider.of<UserProvider>(context);
     //  List<CategoryModel> categories = Categories.getCategories();
 
     var provider = Provider.of<EventProvider>(context);
-    provider.getEventsByFavorite();
+    provider.getEventsByFavorite(userProvider.user!.uID);
     Size size = MediaQuery.of(context).size;
     var local = AppLocalizations.of(context)!;
     return Scaffold(

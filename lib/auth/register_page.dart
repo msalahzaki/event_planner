@@ -1,13 +1,17 @@
 import 'package:event_planner/auth/field_validation.dart';
+import 'package:event_planner/auth/login_page.dart';
 import 'package:event_planner/core/utils/app_assets.dart';
 import 'package:event_planner/core/utils/app_styles.dart';
 import 'package:event_planner/core/utils/custom_dailog.dart';
 import 'package:event_planner/firebase/firebase_authuntace.dart';
-import 'package:event_planner/tabs/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 
+import '../firebase/firestore_user.dart';
 import '../frist_run/widget/language_widget.dart';
+import '../model/user.dart';
+import '../providers/user_provider.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -17,6 +21,7 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  late UserProvider userProvider;
   var formKey = GlobalKey<FormState>();
   bool passObsecure = true;
   var accountNameController = TextEditingController();
@@ -26,6 +31,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
+    userProvider = Provider.of<UserProvider>(context);
     var local = AppLocalizations.of(context)!;
     Size size = MediaQuery.of(context).size;
     return Scaffold(
@@ -160,10 +166,14 @@ class _RegisterPageState extends State<RegisterPage> {
           name: accountNameController.text);
       CustomDailog.hideLoading(context);
       if (message == null) {
+        MyUser? user = await FirestoreUser.getUserByID(
+            FirebaseAuthuntace.credential.user!.uid);
+        userProvider.changeUser(user!);
+
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => Home(),
+              builder: (context) => LoginPage(),
             ));
       } else {
         CustomDailog.showMessageDailog(context,

@@ -2,6 +2,7 @@ import 'package:event_planner/auth/login_page.dart';
 import 'package:event_planner/providers/event_provider.dart';
 import 'package:event_planner/providers/language_provider.dart';
 import 'package:event_planner/providers/theme_provider.dart';
+import 'package:event_planner/providers/user_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -24,6 +25,9 @@ void main() async {
       ChangeNotifierProvider(create: (context) => ThemeProvider(),),
     ChangeNotifierProvider(
       create: (context) => EventProvider(),
+    ),
+    ChangeNotifierProvider(
+      create: (context) => UserProvider(),
     ),
   ], child: const MyApp()));
 }

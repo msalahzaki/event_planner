@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 
 import '../../model/category_model.dart';
 import '../../model/event.dart';
+import '../../providers/user_provider.dart';
 
 class EventDetailsScreen extends StatefulWidget {
   const EventDetailsScreen({super.key, required this.event});
@@ -22,8 +23,11 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
   late EventProvider eventProvider;
 
   late List<CategoryModel> categories;
+
+  late UserProvider userProvider;
   @override
   Widget build(BuildContext context) {
+    userProvider = Provider.of<UserProvider>(context);
     categories = Categories.getCategories(context);
     eventProvider = Provider.of<EventProvider>(context);
     Size size = MediaQuery.of(context).size;
@@ -176,14 +180,17 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
-                eventProvider.deleteEvent(widget.event.id).timeout(
+                eventProvider
+                    .deleteEvent(widget.event.id, userProvider.user!.uID)
+                    .timeout(
                   Durations.short1,
                   onTimeout: () {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                           content: Text('Item deleted successfully!')),
                     );
-                    eventProvider.changeSelectedcategory(-1);
+                    eventProvider.changeSelectedcategory(
+                        -1, userProvider.user!.uID);
                     Navigator.of(context).pop();
                   },
                 );

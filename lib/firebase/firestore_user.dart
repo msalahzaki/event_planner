@@ -12,7 +12,12 @@ class FirestoreUser {
   }
 
   static Future<void> addUser(MyUser user) {
-    var docmentRef = initconnection().doc();
+    var docmentRef = initconnection().doc(user.uID);
     return docmentRef.set(user);
+  }
+
+  static Future<MyUser?> getUserByID(String id) async {
+    var sanpShot = await initconnection().doc(id).get();
+    return sanpShot.data();
   }
 }

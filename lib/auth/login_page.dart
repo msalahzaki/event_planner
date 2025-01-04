@@ -6,9 +6,14 @@ import 'package:event_planner/core/utils/app_color.dart';
 import 'package:event_planner/core/utils/app_styles.dart';
 import 'package:event_planner/core/utils/custom_dailog.dart';
 import 'package:event_planner/firebase/firebase_authuntace.dart';
+import 'package:event_planner/firebase/firestore_user.dart';
+import 'package:event_planner/model/user.dart';
+import 'package:event_planner/providers/event_provider.dart';
+import 'package:event_planner/providers/user_provider.dart';
 import 'package:event_planner/tabs/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 import 'package:toast/toast.dart';
 
 import '../frist_run/widget/language_widget.dart';
@@ -21,13 +26,18 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  late UserProvider userProvider;
   var formKey = GlobalKey<FormState>();
   bool passObsecure = true;
   var emailController = TextEditingController(text: "msalah@gmail.com");
   var passwordController = TextEditingController(text: "123456");
 
+  late EventProvider eventProvider;
+
   @override
   Widget build(BuildContext context) {
+    userProvider = Provider.of<UserProvider>(context);
+    eventProvider = Provider.of<EventProvider>(context);
     ToastContext().init(context);
     Size size = MediaQuery.of(context).size;
     var local = AppLocalizations.of(context)!;
@@ -208,10 +218,14 @@ class _LoginPageState extends State<LoginPage> {
       String? message = await FirebaseAuthuntace.signInWithEmail(
           emailController.text, passwordController.text);
       CustomDailog.hideLoading(context);
-      if (message != null)
+      if (message != null) {
         CustomDailog.showMessageDailog(context,
             message: message, firstButtonLabel: "Ok");
-      else {
+      } else {
+        MyUser? user = await FirestoreUser.getUserByID(
+            FirebaseAuthuntace.credential.user!.uid);
+        userProvider.changeUser(user!);
+        eventProvider.changeSelectedcategory(-1, user.uID);
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => const Home()));
       }

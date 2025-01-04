@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 
 import '../../model/category_model.dart';
 import '../../model/event.dart';
+import '../../providers/user_provider.dart';
 
 class EventItemWidegt extends StatefulWidget {
   const EventItemWidegt({super.key, required this.event});
@@ -19,8 +20,11 @@ class EventItemWidegt extends StatefulWidget {
 }
 
 class _EventItemWidegtState extends State<EventItemWidegt> {
+  late UserProvider userProvider;
+
   @override
   Widget build(BuildContext context) {
+    userProvider = Provider.of<UserProvider>(context);
     var eventProvider = Provider.of<EventProvider>(context);
     String day = widget.event.date.day.toString();
     String month = DateFormat.MMM().format(widget.event.date);
@@ -81,7 +85,9 @@ class _EventItemWidegtState extends State<EventItemWidegt> {
                   IconButton(
                     onPressed: () {
                       eventProvider.updateDoc("isFavorite",
-                          !widget.event.isFavorite, widget.event.id);
+                          !widget.event.isFavorite,
+                          widget.event.id,
+                          userProvider.user!.uID);
                     },
                     icon: Icon(widget.event.isFavorite
                         ? Icons.favorite
