@@ -14,6 +14,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  late AppLocalizations local;
   int currentIndex = 0;
   List<Widget> tab = [
     const HomePage(),
@@ -23,7 +24,7 @@ class _HomeState extends State<Home> {
   ];
   @override
   Widget build(BuildContext context) {
-    var local = AppLocalizations.of(context)!;
+    local = AppLocalizations.of(context)!;
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(

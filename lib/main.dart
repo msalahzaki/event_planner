@@ -53,6 +53,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     var languageProvider = Provider.of<LanguageProvider>(context);
     var themeProvider = Provider.of<ThemeProvider>(context);
+
     return MaterialApp(
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
@@ -60,11 +61,11 @@ class _MyAppState extends State<MyApp> {
       theme: AppTheme.lighttheme,
       themeMode: themeProvider.theme,
       locale: Locale(languageProvider.language),
-      home: firstRun ? const IntialScreen() : const LoginPage(),
+      home: !firstRun ? const LoginPage() : const IntialScreen(),
     );
   }
 
-  void isFirstRun() async {
+  Future<void> isFirstRun() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     firstRun = prefs.getBool('firstRun') ?? true;
   }

@@ -1,6 +1,7 @@
 import 'package:event_planner/firebase/firestore_user.dart';
 import 'package:event_planner/model/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class FirebaseAuthuntace {
   static late UserCredential credential;
@@ -16,7 +17,7 @@ class FirebaseAuthuntace {
   });
 }
 
- static Future<String?> createAccountByEmail(
+  static Future<String?> createAccountByEmail(
       {required String emailAddress,
       required String password,
       required String name}) async {
@@ -67,8 +68,32 @@ class FirebaseAuthuntace {
     return message;
   }
 
-void logout() async{
-  await FirebaseAuth.instance.signOut();
+  static Future<UserCredential?> signInWithGoogle() async {
+    // Trigger the authentication flow
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+    // Check if the user canceled the sign-in
+    if (googleUser == null) {
+      print("Sign-in canceled by user.");
+      return null; // Exit the function
+    }
+
+    // Obtain the auth details from the request
+    final GoogleSignInAuthentication? googleAuth =
+        await googleUser.authentication;
+
+    // Create a new credential
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+
+    // Sign in with Firebase
+    return await FirebaseAuth.instance.signInWithCredential(credential);
+  }
+
+  static void logout() async {
+    await FirebaseAuth.instance.signOut();
 }
 
 }

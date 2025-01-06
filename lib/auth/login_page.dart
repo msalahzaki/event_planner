@@ -11,6 +11,7 @@ import 'package:event_planner/model/user.dart';
 import 'package:event_planner/providers/event_provider.dart';
 import 'package:event_planner/providers/user_provider.dart';
 import 'package:event_planner/tabs/home.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
@@ -183,7 +184,9 @@ class _LoginPageState extends State<LoginPage> {
                       elevation: 0,
                       backgroundColor: AppColor.transpernt,
                       side: const BorderSide(color: AppColor.primaryLight)),
-                  onPressed: () {},
+                  onPressed: () {
+                    loginWithGmail();
+                  },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -231,6 +234,35 @@ class _LoginPageState extends State<LoginPage> {
       }
 
       //Toast.show("Login Successfuly",backgroundColor:Colors.greenAccent,duration: Toast.lengthLong);
+    }
+  }
+
+  void loginWithGmail() async {
+    try {
+      UserCredential? userCredential =
+          await FirebaseAuthuntace.signInWithGoogle();
+
+      // Retrieve user details
+      User? user1 = userCredential!.user;
+
+      if (user1 != null) {
+        String? username = user1.displayName;
+        String? email = user1.email;
+        MyUser user =
+            MyUser(uID: user1.uid, name: username ?? "", email: email ?? "");
+        FirestoreUser.addUser(user);
+        userProvider.changeUser(user);
+        eventProvider.changeSelectedcategory(-1, user.uID);
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => const Home()));
+      } else {
+        print("No user details available.");
+      }
+    } catch (e) {
+      CustomDailog.showMessageDailog(
+          message: "Error during Google sign-in: $e",
+          context,
+          firstButtonLabel: "OK");
     }
   }
 }

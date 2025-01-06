@@ -1,6 +1,7 @@
 import 'package:event_planner/auth/login_page.dart';
 import 'package:event_planner/core/utils/app_assets.dart';
 import 'package:event_planner/core/utils/app_styles.dart';
+import 'package:event_planner/firebase/firebase_authuntace.dart';
 import 'package:event_planner/providers/language_provider.dart';
 import 'package:event_planner/providers/theme_provider.dart';
 import 'package:flutter/material.dart';
@@ -130,6 +131,7 @@ class _ProfileScreenState extends State<ProfilePage> {
             const Spacer(),
             ElevatedButton(
               onPressed: () {
+                FirebaseAuthuntace.logout();
                 Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(

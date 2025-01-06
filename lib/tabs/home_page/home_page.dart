@@ -135,7 +135,7 @@ class _HomePageState extends State<HomePage> {
                     height: double.infinity,
                     child: CategoryWidget(
                       icon: Icons.clear_all,
-                      label: "All ",
+                      label: local.all,
                       isSelected: eventProvider.selectedCategory == -1,
                     ),
                   ),

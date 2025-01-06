@@ -49,6 +49,7 @@ dependencies:
   cloud_firestore: ^5.6.0
   toast: ^0.2.9
   firebase_auth: ^5.3.4
+  google_sign_in:
 
 dev_dependencies:
   flutter_test:
