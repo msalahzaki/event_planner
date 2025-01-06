@@ -1,6 +1,8 @@
 import 'package:event_planner/auth/login_page.dart';
+import 'package:event_planner/providers/event_provider.dart';
 import 'package:event_planner/providers/language_provider.dart';
 import 'package:event_planner/providers/theme_provider.dart';
+import 'package:event_planner/providers/user_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -16,21 +18,29 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  // await FirebaseFirestore.instance.disableNetwork();
   runApp(MultiProvider(providers: [
       ChangeNotifierProvider(create: (context) => LanguageProvider(),),
       ChangeNotifierProvider(create: (context) => ThemeProvider(),),
-    ], child: MyApp()));
+    ChangeNotifierProvider(
+      create: (context) => EventProvider(),
+    ),
+    ChangeNotifierProvider(
+      create: (context) => UserProvider(),
+    ),
+  ], child: const MyApp()));
 }
 
 class MyApp extends StatefulWidget {
-  MyApp({super.key});
+  const MyApp({super.key});
 
   @override
   State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
-  bool FirstRun = true;
+  bool firstRun = true;
 
   @override
   void initState() {
@@ -43,6 +53,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     var languageProvider = Provider.of<LanguageProvider>(context);
     var themeProvider = Provider.of<ThemeProvider>(context);
+
     return MaterialApp(
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
@@ -50,12 +61,12 @@ class _MyAppState extends State<MyApp> {
       theme: AppTheme.lighttheme,
       themeMode: themeProvider.theme,
       locale: Locale(languageProvider.language),
-      home: FirstRun ? IntialScreen() : LoginPage(),
+      home: !firstRun ? const LoginPage() : const IntialScreen(),
     );
   }
 
-  void isFirstRun() async {
+  Future<void> isFirstRun() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    FirstRun = prefs.getBool('firstRun') ?? true;
+    firstRun = prefs.getBool('firstRun') ?? true;
   }
 }

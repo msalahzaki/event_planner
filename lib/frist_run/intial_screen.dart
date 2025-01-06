@@ -65,7 +65,7 @@ class _IntialScreenState extends State<IntialScreen> {
                   local.language,
                   style: AppStyles.normal20blue,
                 ),
-                LanguageWidget(),
+                const LanguageWidget(),
               ],
             ),
             SizedBox(

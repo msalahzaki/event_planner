@@ -1,49 +1,68 @@
 import 'package:event_planner/core/utils/app_color.dart';
 import 'package:event_planner/core/utils/app_styles.dart';
+import 'package:event_planner/firebase/firestore_event.dart';
+import 'package:event_planner/model/event.dart';
+import 'package:event_planner/providers/event_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 
 import '../../model/category_model.dart';
+import '../../providers/user_provider.dart';
 import '../home_page/category_widget.dart';
 
-class AddEventScreen extends StatefulWidget {
-  const AddEventScreen({super.key});
+class AddEditEventScreen extends StatefulWidget {
+  const AddEditEventScreen({super.key, this.event});
+  final Event? event;
 
   @override
-  State<AddEventScreen> createState() => _AddEventScreenState();
+  State<AddEditEventScreen> createState() => _AddEventScreenState();
 }
 
-class _AddEventScreenState extends State<AddEventScreen> {
-  List<CategoryModel> categories = Categories.getCategories();
- String? eventDate ;
+class _AddEventScreenState extends State<AddEditEventScreen> {
+  late List<CategoryModel> categories;
+  String? eventDateText;
+  late DateTime eventDate;
   int selectedCategory = 0;
   String? eventTime;
 
   TextEditingController eventTitleController = TextEditingController();
   TextEditingController eventDescriptionController = TextEditingController();
   var formkey = GlobalKey<FormState>();
-  var local;
+  late AppLocalizations local;
+  late EventProvider eventProvider;
+  late UserProvider userProvider;
 
   @override
-  initState(){
-        super.initState();
+  initState() {
+    if (widget.event != null) {
+      eventDateText = widget.event!.date.toString().split(" ")[0];
+      selectedCategory = widget.event!.categoryID;
+      eventTime = widget.event!.time;
+      eventTitleController.text = widget.event!.title;
+      eventDescriptionController.text = widget.event!.description;
+    }
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    categories = Categories.getCategories(context);
+    eventProvider = Provider.of<EventProvider>(context);
+    userProvider = Provider.of<UserProvider>(context);
     local = AppLocalizations.of(context)!;
-    eventDate ??=local.choose_date ;
-    eventTime ??= local.choose_time ;
+    eventDateText ??= local.choose_date;
+    eventTime ??= local.choose_time;
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        iconTheme: IconThemeData(color: AppColor.primaryLight),
+        iconTheme: const IconThemeData(color: AppColor.primaryLight),
         backgroundColor: AppColor.semiblue,
         centerTitle: true,
         title: Text(
-          local.create_event,
+          widget.event == null ? local.create_event : local.edit_event,
           style: AppStyles.normal20blue,
         ),
       ),
@@ -146,7 +165,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                         pickdate();
                       },
                       child: Text(
-                        eventDate!,
+                        eventDateText!,
                         style: AppStyles.normal16blue,
                       )),
                 ],
@@ -196,9 +215,9 @@ class _AddEventScreenState extends State<AddEventScreen> {
                 height: size.height * .01,
               ),
               ElevatedButton(
-                  onPressed: submit,
+                  onPressed: widget.event == null ? submit : update,
                   child: Text(
-                    local.add_event,
+                    widget.event == null ? local.add_event : local.update_event,
                     style: AppStyles.bold20white,
                   ))
             ],
@@ -207,40 +226,47 @@ class _AddEventScreenState extends State<AddEventScreen> {
       ),
     );
   }
-  Future<void> pickdate () async{
-    DateTime? pickeddate = await showDatePicker(context: context,initialDate: DateTime.now(),
+
+  Future<void> pickdate() async {
+    DateTime? pickeddate = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
         firstDate: DateTime.now(),
         lastDate: DateTime(2030));
-    if (pickeddate != null){
-      eventDate = pickeddate.toString().split(" ")[0];
-      setState(() {
-      });
-    }}
+    if (pickeddate != null) {
+      eventDate = pickeddate;
+      eventDateText = pickeddate.toString().split(" ")[0];
+      setState(() {});
+    }
+  }
 
-  Future<void> pickdtime () async{
-    TimeOfDay? pickedTime = await showTimePicker(context: context,initialTime: TimeOfDay.now());
-    if (pickedTime != null){
+  Future<void> pickdtime() async {
+    TimeOfDay? pickedTime =
+        await showTimePicker(context: context, initialTime: TimeOfDay.now());
+    if (pickedTime != null) {
       eventTime = pickedTime.format(context);
-      setState(() {
-      });
-    }}
+      setState(() {});
+    }
+  }
 
   String? titleAndDescriptionValidate(String? text) {
     if (text == null || text.trim().length < 3) {
       return ("Please Enter Valid Event details ");
-    } else
+    } else {
       return null;
+    }
   }
 
-  submit() {
+  bool isValidData() {
     if (formkey.currentState!.validate()) {
-      if (eventDate == null || eventDate!.contains(local.choose_date)) {
+      if (eventDateText == null || eventDateText!.contains(local.choose_date)) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text("please Enter Valid Date"),
             backgroundColor: Colors.red,
           ),
         );
+        return false;
       }
       if (eventTime == null || eventTime!.contains(local.choose_time)) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -249,7 +275,79 @@ class _AddEventScreenState extends State<AddEventScreen> {
             backgroundColor: Colors.red,
           ),
         );
+        return false;
       }
+      return true;
+    }
+    return false;
+  }
+
+  submit() {
+    if (!isValidData()) return;
+    FirestoreEvent.addEvents(Event(
+            title: eventTitleController.text,
+            description: eventDescriptionController.text,
+            categoryID: selectedCategory,
+            date: eventDate,
+                time: eventTime!),
+            userProvider.user!.uID)
+        .timeout(
+      const Duration(milliseconds: 500),
+      onTimeout: () {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Event Added Succesed"),
+            backgroundColor: Colors.green,
+          ),
+        );
+      },
+    );
+    eventProvider.changeSelectedcategory(-1, userProvider.user!.uID);
+    Navigator.pop(context);
+  }
+
+  update() {
+    if (!isValidData()) return;
+    String id = widget.event!.id;
+    try {
+      if (eventDateText != widget.event!.date.toString().split(" ")[0]) {
+        eventProvider.updateDoc("date", eventDate.millisecondsSinceEpoch, id,
+            userProvider.user!.uID);
+      }
+
+      if (selectedCategory != widget.event!.categoryID) {
+        eventProvider.updateDoc(
+            "categoryID", selectedCategory, id, userProvider.user!.uID);
+      }
+
+      if (eventTime != widget.event!.time) {
+        eventProvider.updateDoc("time", eventTime, id, userProvider.user!.uID);
+      }
+
+      if (eventTitleController.text != widget.event!.title) {
+        eventProvider.updateDoc(
+            "title", eventTitleController.text, id, userProvider.user!.uID);
+      }
+
+      if (eventDescriptionController.text != widget.event!.description) {
+        eventProvider.updateDoc("description", eventDescriptionController.text,
+            id, userProvider.user!.uID);
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text("Event Edited "),
+        backgroundColor: Colors.green,
+      ));
+      eventProvider.changeSelectedcategory(-1, userProvider.user!.uID);
+      eventProvider.getEventsById(userProvider.user!.uID, id);
+      Navigator.pop(context);
+    } catch (exception) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Event Add Error  $exception"),
+        backgroundColor: Colors.red,
+      ));
     }
   }
+
 }
+

@@ -40,7 +40,18 @@
   "event_details": "تفاصبل الحدث",
   "edit_event": "تعديل الحدث",
   "update_event": "تعديل الحدث",
+  "no_Item_Found": "لا توجد بيانات",
+  "all": "الكل",
 
+  "birthday": "عيد ميلاد",
+  "sport": "رياضة",
+  "eating": "طعام",
+  "gaming": "العاب",
+  "book_Club": "نادي الكتاب",
+  "holiday": "الاجازة",
+  "meeting": "اجتماع",
+  "workShop": "ورشة عمل",
+  "exhibition": "معرض",
 
 
   "intro1_title": "إضفاء الطابع الشخصي على تجربتك",

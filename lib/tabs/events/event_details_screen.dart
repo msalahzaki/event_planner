@@ -1,23 +1,49 @@
-import 'package:event_planner/core/utils/app_assets.dart';
 import 'package:event_planner/core/utils/app_color.dart';
 import 'package:event_planner/core/utils/app_styles.dart';
+import 'package:event_planner/providers/event_provider.dart';
+import 'package:event_planner/tabs/events/add_Edit_event_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+
+import '../../model/category_model.dart';
+import '../../model/event.dart';
+import '../../providers/user_provider.dart';
 
 class EventDetailsScreen extends StatefulWidget {
-  const EventDetailsScreen({super.key});
+  const EventDetailsScreen({super.key, required this.eventID});
 
+  final String eventID;
   @override
   State<EventDetailsScreen> createState() => _EventDetailsScreenState();
 }
 
 class _EventDetailsScreenState extends State<EventDetailsScreen> {
+  late EventProvider eventProvider;
+  late Event event;
+  late List<CategoryModel> categories;
+  late UserProvider userProvider;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    eventProvider = Provider.of<EventProvider>(context);
+    userProvider = Provider.of<UserProvider>(context);
+    if (eventProvider.event == null) {
+      eventProvider.getEventsById(userProvider.user!.uID, widget.eventID);
+    }
+    event = eventProvider.event!;
+    categories = Categories.getCategories(context);
     Size size = MediaQuery.of(context).size;
     var local = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
+        iconTheme: const IconThemeData(color: AppColor.primaryLight),
         centerTitle: true,
         backgroundColor: AppColor.semiblue,
         title: Text(
@@ -25,12 +51,27 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
           style: AppStyles.normal16blue,
         ),
         actions: [
-          Icon(
-            Icons.edit,
+            IconButton(
+            icon: const Icon(
+              Icons.edit,
+            ),
             color: AppColor.primaryLight,
+
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AddEditEventScreen(
+                      event: event,
+                    ),
+                  ));
+            },
           ),
-          Icon(
-            Icons.delete,
+          IconButton(
+            icon: const Icon(Icons.delete),
+            onPressed: () {
+              deleteEvent();
+            },
             color: AppColor.red,
           ),
         ],
@@ -48,11 +89,12 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
                   image: DecorationImage(
-                      image: AssetImage(AppAssets.Meeting), fit: BoxFit.fill),
+                      image: AssetImage(categories[event.categoryID].image),
+                      fit: BoxFit.fill),
                 ),
               ),
               Text(
-                "Title ",
+                event.title,
                 style: AppStyles.normal24blue,
               ),
               SizedBox(
@@ -75,9 +117,10 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                     color: AppColor.white,
                   ),
                 ),
-                title: Text("21-Novamber - 2024", style: AppStyles.normal16blue),
+                title: Text(DateFormat('dd MMMM yyyy').format(event.date),
+                    style: AppStyles.normal16blue),
                 subtitle: Text(
-                  "12:12 PM",
+                  event.time,
                   style: AppStyles.normal16black,
                 ),
               ),
@@ -123,13 +166,53 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                 style: AppStyles.normal16black,
               ),
               Text(
-                "event description",
+                event.description,
                 style: AppStyles.normal16black,
               ),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  void deleteEvent() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirm Deletion'),
+          content: const Text('Are you sure you want to delete this Event?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                eventProvider
+                    .deleteEvent(event.id, userProvider.user!.uID)
+                    .timeout(
+                  Durations.short1,
+                  onTimeout: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                          content: Text('Item deleted successfully!')),
+                    );
+                    eventProvider.changeSelectedcategory(
+                        -1, userProvider.user!.uID);
+                    Navigator.of(context).pop();
+                  },
+                );
+              },
+              child: const Text('Delete'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

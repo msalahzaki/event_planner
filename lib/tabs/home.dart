@@ -1,4 +1,4 @@
-import 'package:event_planner/tabs/events/add_event_screen.dart';
+import 'package:event_planner/tabs/events/add_Edit_event_screen.dart';
 import 'package:event_planner/tabs/home_page/home_page.dart';
 import 'package:event_planner/tabs/love/favorite_page.dart';
 import 'package:event_planner/tabs/map/map_page.dart';
@@ -14,7 +14,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  int current_index = 0;
+  late AppLocalizations local;
+  int currentIndex = 0;
   List<Widget> tab = [
     const HomePage(),
     const MapPage(),
@@ -23,12 +24,16 @@ class _HomeState extends State<Home> {
   ];
   @override
   Widget build(BuildContext context) {
-    var local = AppLocalizations.of(context)!;
+    local = AppLocalizations.of(context)!;
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => AddEventScreen(),));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const AddEditEventScreen(),
+              ));
         },
         child: const Icon(Icons.add),
       ),
@@ -36,33 +41,33 @@ class _HomeState extends State<Home> {
         data: Theme.of(context)
             .copyWith(canvasColor: Theme.of(context).primaryColor),
         child: BottomNavigationBar(
-          currentIndex: current_index,
+          currentIndex: currentIndex,
           items: [
-            item(Icon(current_index != 0 ? Icons.home_outlined : Icons.home),
+            item(Icon(currentIndex != 0 ? Icons.home_outlined : Icons.home),
                 local.home),
             item(
-                Icon(current_index != 1
+                Icon(currentIndex != 1
                     ? Icons.location_on_outlined
                     : Icons.location_on),
                 local.map),
             item(
-                Icon(current_index != 2
-                    ? Icons.favorite_border
+                Icon(
+                    currentIndex != 2 ? Icons.favorite_border
                     : Icons.favorite),
                 local.love),
             item(
-                Icon(current_index != 3
+                Icon(currentIndex != 3
                     ? Icons.person_2_outlined
                     : Icons.person_2),
                 local.profile),
           ],
           onTap: (value) {
-            current_index = value;
+            currentIndex = value;
             setState(() {});
           },
         ),
       ),
-      body: tab[current_index],
+      body: tab[currentIndex],
     );
   }
 

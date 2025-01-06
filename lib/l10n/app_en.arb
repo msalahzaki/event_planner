@@ -40,6 +40,17 @@
   "event_details": "Event Details",
   "edit_event": "Edit Event",
   "update_event": "Update Event",
+  "birthday": "Birthday",
+  "sport": "Sport",
+  "eating": "Eating",
+  "gaming": "Gaming",
+  "book_Club": "Book Club",
+  "holiday": "Holiday",
+  "meeting": "Meeting",
+  "workShop": "WorkShop",
+  "exhibition": "Exhibition",
+  "no_Item_Found": "No Item Found",
+  "all": "All",
 
 
   "intro1_title": "Personalize Your Experience",

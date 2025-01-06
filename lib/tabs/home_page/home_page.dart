@@ -1,10 +1,16 @@
 import 'package:event_planner/core/utils/app_color.dart';
 import 'package:event_planner/core/utils/app_styles.dart';
 import 'package:event_planner/model/category_model.dart';
+import 'package:event_planner/providers/event_provider.dart';
+import 'package:event_planner/providers/language_provider.dart';
+import 'package:event_planner/providers/theme_provider.dart';
 import 'package:event_planner/tabs/home_page/category_widget.dart';
 import 'package:event_planner/tabs/home_page/event_item_widegt.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
+
+import '../../providers/user_provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -14,12 +20,32 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<CategoryModel> categories = Categories.getCategories();
-  int selectedCategory = -1;
+  @override
+  initState() {
+    super.initState();
+  }
+
+  late List<CategoryModel> categories;
+  late UserProvider userProvider;
+
+  late ThemeProvider themeProvider;
+
+  late LanguageProvider languageProvider;
+
   @override
   Widget build(BuildContext context) {
+    userProvider = Provider.of<UserProvider>(context);
+    themeProvider = Provider.of<ThemeProvider>(context);
+    languageProvider = Provider.of<LanguageProvider>(context);
+    categories = Categories.getCategories(context);
     var local = AppLocalizations.of(context)!;
+    var eventProvider = Provider.of<EventProvider>(context);
     Size size = MediaQuery.of(context).size;
+
+    if (eventProvider.eventFilteredList.isEmpty &&
+        eventProvider.selectedCategory == -1) {
+      eventProvider.getEventsByCategory(userProvider.user!.uID);
+    }
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: size.height * 0.1,
@@ -32,7 +58,7 @@ class _HomePageState extends State<HomePage> {
               style: AppStyles.normal14white,
             ),
             Text(
-              "Mohamed Salah",
+              userProvider.user!.name,
               style: AppStyles.bold24white,
             ),
             Row(children: [
@@ -48,22 +74,42 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
         actions: [
-          const Icon(
-            Icons.sunny,
-            color: AppColor.white,
+          IconButton(
+            icon: Icon(
+              themeProvider.theme == ThemeMode.light
+                  ? Icons.sunny
+                  : Icons.nightlight,
+              color: AppColor.white,
+            ),
+            onPressed: () {
+              themeProvider.changeTheme(themeProvider.theme == ThemeMode.light
+                  ? ThemeMode.dark
+                  : ThemeMode.light);
+
+              setState(() {});
+            },
           ),
           SizedBox(
             width: size.width * 0.02,
           ),
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: AppColor.semiblue,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Text(
-              "EN",
-              style: AppStyles.bold14blue,
+          InkWell(
+            onTap: () {
+              languageProvider.language == "en"
+                  ? languageProvider.changeLanguage(language: "ar")
+                  : languageProvider.changeLanguage(language: "en");
+
+              setState(() {});
+            },
+            child: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: AppColor.semiblue,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                languageProvider.language.toUpperCase(),
+                style: AppStyles.bold14blue,
+              ),
             ),
           )
         ],
@@ -82,15 +128,15 @@ class _HomePageState extends State<HomePage> {
               children: [
                 InkWell(
                   onTap: () {
-                    selectedCategory = -1;
-                    setState(() {});
+                    eventProvider.changeSelectedcategory(
+                        -1, userProvider.user!.uID);
                   },
                   child: SizedBox(
                     height: double.infinity,
                     child: CategoryWidget(
                       icon: Icons.clear_all,
-                      label: "All ",
-                      isSelected: selectedCategory == -1,
+                      label: local.all,
+                      isSelected: eventProvider.selectedCategory == -1,
                     ),
                   ),
                 ),
@@ -101,13 +147,13 @@ class _HomePageState extends State<HomePage> {
                     itemBuilder: (context, index) {
                       return InkWell(
                         onTap: () {
-                          selectedCategory = index;
-                          setState(() {});
+                          eventProvider.changeSelectedcategory(
+                              index, userProvider.user!.uID);
                         },
                         child: CategoryWidget(
                           icon: categories[index].icon,
                           label: categories[index].name,
-                          isSelected: index == selectedCategory,
+                          isSelected: index == eventProvider.selectedCategory,
                         ),
                       );
                     },
@@ -117,26 +163,19 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           Expanded(
-            child: ListView(
-              children: [
-                EventItemWidegt(
-                    image: categories[1].image,
-                    date: "22 Dec",
-                    title: "This is a Birthday Party ",
-                    isFavorite: true),
-                EventItemWidegt(
-                    image: categories[2].image,
-                    date: "22 Dec",
-                    title: "Meeting for Updating The Development Method",
-                    isFavorite: true),
-                EventItemWidegt(
-                    image: categories[3].image,
-                    date: "22 Dec",
-                    title: "",
-                    isFavorite: true),
-              ],
-            ),
-          )
+              child: eventProvider.eventFilteredList.isEmpty
+                  ? Center(
+                      child: Text(
+                        local.no_Item_Found,
+                        style: AppStyles.bold20blue,
+                      ),
+                    )
+                  : ListView.builder(
+                      itemCount: eventProvider.eventFilteredList.length,
+                      itemBuilder: (context, index) {
+                        return EventItemWidegt(
+                            event: eventProvider.eventFilteredList[index]);
+                      }))
         ],
       ),
     );
