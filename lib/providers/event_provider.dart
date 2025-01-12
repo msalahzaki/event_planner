@@ -60,10 +60,7 @@ class EventProvider extends ChangeNotifier {
   void updateDoc(String key, dynamic newValue, String id, String userID) async {
     await FirestoreEvent.initEventconnection(userID)
         .doc(id)
-        .update({key: newValue}).timeout(const Duration(seconds: 1),
-            onTimeout: () {
-      print("sucess");
-    }).catchError((error) => print("Failed to update user: $error"));
+        .update({key: newValue}).catchError((error) => print("Failed to update user: $error"));
     getEventsByFavorite(userID);
     getEventsByCategory(userID);
   }

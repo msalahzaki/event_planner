@@ -224,13 +224,17 @@ class _LoginPageState extends State<LoginPage> {
       if (message != null) {
         CustomDailog.showMessageDailog(context,
             message: message, firstButtonLabel: "Ok");
+
       } else {
+        CustomDailog.showLoading(context);
         MyUser? user = await FirestoreUser.getUserByID(
             FirebaseAuthuntace.credential.user!.uid);
         userProvider.changeUser(user!);
         eventProvider.changeSelectedcategory(-1, user.uID);
+        CustomDailog.hideLoading(context);
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => const Home()));
+
       }
 
       //Toast.show("Login Successfuly",backgroundColor:Colors.greenAccent,duration: Toast.lengthLong);

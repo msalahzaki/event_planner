@@ -66,161 +66,165 @@ class _AddEventScreenState extends State<AddEditEventScreen> {
           style: AppStyles.normal20blue,
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Form(
-          key: formkey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // Category Image
-              Container(
-                margin: const EdgeInsets.symmetric(vertical: 5),
-                height: size.height * .2,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  image: DecorationImage(
-                      image: AssetImage(categories[selectedCategory].image),
-                      fit: BoxFit.fill),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Form(
+            key: formkey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // Category Image
+                Container(
+                  margin: const EdgeInsets.symmetric(vertical: 5),
+                  height: size.height * .2,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    image: DecorationImage(
+                        image: AssetImage(categories[selectedCategory].image),
+                        fit: BoxFit.fill),
+                  ),
                 ),
-              ),
-              SizedBox(
-                height: size.height * 0.06,
-                // List Of Categories
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: categories.length,
-                        itemBuilder: (context, index) {
-                          return InkWell(
-                            onTap: () {
-                              selectedCategory = index;
-                              setState(() {});
-                            },
-                            child: CategoryWidget(
-                              icon: categories[index].icon,
-                              label: categories[index].name,
-                              isSelected: index == selectedCategory,
-                              bgColorSelected: AppColor.primaryLight,
-                              bgColorunSelected: AppColor.transpernt,
-                              labelColorSelected: AppColor.semiblue,
-                              labelColorunSelected: AppColor.primaryLight,
-                            ),
-                          );
-                        },
+                SizedBox(
+                  height: size.height * 0.06,
+                  // List Of Categories
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: categories.length,
+                          itemBuilder: (context, index) {
+                            return InkWell(
+                              onTap: () {
+                                selectedCategory = index;
+                                setState(() {});
+                              },
+                              child: CategoryWidget(
+                                icon: categories[index].icon,
+                                label: categories[index].name,
+                                isSelected: index == selectedCategory,
+                                bgColorSelected: AppColor.primaryLight,
+                                bgColorunSelected: AppColor.transpernt,
+                                labelColorSelected: AppColor.semiblue,
+                                labelColorunSelected: AppColor.primaryLight,
+                              ),
+                            );
+                          },
+                        ),
                       ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: size.height * .01,
+                ),
+                Text(
+                  local.title,
+                  style: AppStyles.normal16black,
+                ),
+                SizedBox(
+                  height: size.height * .01,
+                ),
+                TextFormField(
+                  validator: titleAndDescriptionValidate,
+                  controller: eventTitleController,
+                  style: AppStyles.normal16gray,
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.note_alt_outlined),
+                    hintText: local.event_title,
+                  ),
+                ),
+                SizedBox(
+                  height: size.height * .01,
+                ),
+                Text(
+                  local.description,
+                  style: AppStyles.normal16black,
+                ),
+                TextFormField(
+                  controller: eventDescriptionController,
+                  validator: titleAndDescriptionValidate,
+                  maxLines: 5,
+                  style: AppStyles.normal16gray,
+                  decoration: InputDecoration(
+                    filled: true,
+                    isDense: true,
+                    hintText: local.event_description,
+                  ),
+                ),
+                Row(
+                  children: [
+                    const Icon(Icons.calendar_month),
+                    Text(
+                      local.event_date,
+                      style: AppStyles.normal16black,
                     ),
+                    const Spacer(),
+                    TextButton(
+                        onPressed: () {
+                          pickdate();
+                        },
+                        child: Text(
+                          eventDateText!,
+                          style: AppStyles.normal16blue,
+                        )),
                   ],
                 ),
-              ),
-              SizedBox(
-                height: size.height * .01,
-              ),
-              Text(
-                local.title,
-                style: AppStyles.normal16black,
-              ),
-              SizedBox(
-                height: size.height * .01,
-              ),
-              TextFormField(
-                validator: titleAndDescriptionValidate,
-                controller: eventTitleController,
-                style: AppStyles.normal16gray,
-                decoration: InputDecoration(
-                  prefixIcon: const Icon(Icons.note_alt_outlined),
-                  hintText: local.event_title,
-                ),
-              ),
-              SizedBox(
-                height: size.height * .01,
-              ),
-              Text(
-                local.description,
-                style: AppStyles.normal16black,
-              ),
-              TextFormField(
-                controller: eventDescriptionController,
-                validator: titleAndDescriptionValidate,
-                maxLines: 5,
-                style: AppStyles.normal16gray,
-                decoration: InputDecoration(
-                  filled: true,
-                  isDense: true,
-                  hintText: local.event_description,
-                ),
-              ),
-              Row(
-                children: [
-                  const Icon(Icons.calendar_month),
-                  Text(
-                    local.event_date,
-                    style: AppStyles.normal16black,
-                  ),
-                  const Spacer(),
-                  TextButton(
-                      onPressed: () {
-                        pickdate();
-                      },
-                      child: Text(
-                        eventDateText!,
-                        style: AppStyles.normal16blue,
-                      )),
-                ],
-              ),
-              Row(
-                children: [
-                  const Icon(Icons.access_time),
-                  Text(
-                    local.event_time,
-                    style: AppStyles.normal16black,
-                  ),
-                  const Spacer(),
-                  TextButton(
-                      onPressed: () {
-                        pickdtime();
-                      },
-                      child: Text(eventTime!, style: AppStyles.normal16blue)),
-                ],
-              ),
-              Text(
-                local.location,
-                style: AppStyles.normal16black,
-              ),
-              ListTile(
-                  shape: RoundedRectangleBorder(
-                      side: const BorderSide(
-                        color: AppColor.primaryLight,
-                      ),
-                      borderRadius: BorderRadius.circular(15.0)),
-                  leading: Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        color: AppColor.primaryLight),
-                    child: const Icon(
-                      Icons.my_location_outlined,
-                      color: AppColor.white,
+                Row(
+                  children: [
+                    const Icon(Icons.access_time),
+                    Text(
+                      local.event_time,
+                      style: AppStyles.normal16black,
                     ),
-                  ),
-                  title: Text(local.choose_event_location,
-                      style: AppStyles.normal16blue),
-                  trailing: const Icon(
-                    Icons.arrow_forward_ios_sharp,
-                    color: AppColor.primaryLight,
-                  )),
-              SizedBox(
-                height: size.height * .01,
-              ),
-              ElevatedButton(
-                  onPressed: widget.event == null ? submit : update,
-                  child: Text(
-                    widget.event == null ? local.add_event : local.update_event,
-                    style: AppStyles.bold20white,
-                  ))
-            ],
+                    const Spacer(),
+                    TextButton(
+                        onPressed: () {
+                          pickdtime();
+                        },
+                        child: Text(eventTime!, style: AppStyles.normal16blue)),
+                  ],
+                ),
+                Text(
+                  local.location,
+                  style: AppStyles.normal16black,
+                ),
+                ListTile(
+                    shape: RoundedRectangleBorder(
+                        side: const BorderSide(
+                          color: AppColor.primaryLight,
+                        ),
+                        borderRadius: BorderRadius.circular(15.0)),
+                    leading: Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: AppColor.primaryLight),
+                      child: const Icon(
+                        Icons.my_location_outlined,
+                        color: AppColor.white,
+                      ),
+                    ),
+                    title: Text(local.choose_event_location,
+                        style: AppStyles.normal16blue),
+                    trailing: const Icon(
+                      Icons.arrow_forward_ios_sharp,
+                      color: AppColor.primaryLight,
+                    )),
+                SizedBox(
+                  height: size.height * .01,
+                ),
+                ElevatedButton(
+                    onPressed: widget.event == null ? submit : update,
+                    child: Text(
+                      widget.event == null
+                          ? local.add_event
+                          : local.update_event,
+                      style: AppStyles.bold20white,
+                    ))
+              ],
+            ),
           ),
         ),
       ),
@@ -284,26 +288,24 @@ class _AddEventScreenState extends State<AddEditEventScreen> {
 
   submit() {
     if (!isValidData()) return;
-    FirestoreEvent.addEvents(Event(
-            title: eventTitleController.text,
-            description: eventDescriptionController.text,
-            categoryID: selectedCategory,
-            date: eventDate,
+    FirestoreEvent.addEvents(
+            Event(
+                title: eventTitleController.text,
+                description: eventDescriptionController.text,
+                categoryID: selectedCategory,
+                date: eventDate,
                 time: eventTime!),
-            userProvider.user!.uID)
-        .timeout(
-      const Duration(milliseconds: 500),
-      onTimeout: () {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+            userProvider.user!.uID);
+
+        
+
+        eventProvider.changeSelectedcategory(-1, userProvider.user!.uID);
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
             content: Text("Event Added Succesed"),
-            backgroundColor: Colors.green,
-          ),
-        );
-      },
-    );
-    eventProvider.changeSelectedcategory(-1, userProvider.user!.uID);
-    Navigator.pop(context);
+            backgroundColor: Colors.green));
+
+
   }
 
   update() {
@@ -348,6 +350,4 @@ class _AddEventScreenState extends State<AddEditEventScreen> {
       ));
     }
   }
-
 }
-

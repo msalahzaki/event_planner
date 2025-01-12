@@ -194,10 +194,8 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
               onPressed: () {
                 Navigator.of(context).pop();
                 eventProvider
-                    .deleteEvent(event.id, userProvider.user!.uID)
-                    .timeout(
-                  Durations.short1,
-                  onTimeout: () {
+                    .deleteEvent(event.id, userProvider.user!.uID);
+
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                           content: Text('Item deleted successfully!')),
@@ -205,8 +203,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                     eventProvider.changeSelectedcategory(
                         -1, userProvider.user!.uID);
                     Navigator.of(context).pop();
-                  },
-                );
+
               },
               child: const Text('Delete'),
             ),
