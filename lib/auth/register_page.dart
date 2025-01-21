@@ -185,6 +185,6 @@ class _RegisterPageState extends State<RegisterPage>
 
   @override
   showLoading() {
-    CustomDailog.hideLoading(context);
+    CustomDailog.showLoading(context);
   }
 }

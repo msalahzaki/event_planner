@@ -29,8 +29,7 @@ class RegisterPageViewmodel extends ChangeNotifier {
         MyUser? user = await FirestoreUser.getUserByID(
             FirebaseAuthuntace.credential.user!.uid);
          userProvider.changeUser(user!);
-
-        navigator.goLoginPage();
+       navigator.goLoginPage();
       } else {
         navigator.showDailog(message);
       }
