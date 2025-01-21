@@ -21,7 +21,6 @@ class ProfilePage extends StatefulWidget {
 class _ProfileScreenState extends State<ProfilePage> {
   late String selectedLanguage ;
  late String selectedTheme ;
-
   late UserProvider userProvider;
   @override
   Widget build(BuildContext context) {
@@ -42,15 +41,23 @@ class _ProfileScreenState extends State<ProfilePage> {
             SizedBox(width: 100,
                 child: Image.asset(AppAssets.Route)),
             const SizedBox(width: 20,),
-             Column(crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  userProvider.user!.name,
-                  style: AppStyles.bold24white,
-                ),
-                Text(userProvider.user!.email, style: AppStyles.normal16white),
-              ],
-            )
+             Expanded(
+               child: Column(
+                       crossAxisAlignment: CrossAxisAlignment.start,
+                       children: [
+                         Text(
+                           userProvider.user!.name,
+                           style: AppStyles.bold24white,
+                           overflow: TextOverflow.fade,  // Truncate with ellipsis if overflow
+                           maxLines: 1,
+                         ),
+                         Text(
+                           userProvider.user!.email,
+                           style: AppStyles.normal16white,
+                         ),
+                       ],
+                     ),
+             ),
           ],
         ),
       ),

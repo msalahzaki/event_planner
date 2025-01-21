@@ -1,4 +1,5 @@
 import 'package:event_planner/auth/login_page_navigator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../firebase/firebase_authuntace.dart';
@@ -34,6 +35,31 @@ class LoginPageViewmodel extends ChangeNotifier {
         eventProvider.changeSelectedcategory(-1, user.uID);
         navigator.goHome();
       }
+    }
+  }
+
+  void loginWithGmail() async {
+    try {
+      UserCredential? userCredential =
+      await FirebaseAuthuntace.signInWithGoogle();
+
+      // Retrieve user details
+      User? user1 = userCredential!.user;
+
+      if (user1 != null) {
+        String? username = user1.displayName;
+        String? email = user1.email;
+        MyUser user =
+        MyUser(uID: user1.uid, name: username ?? "", email: email ?? "");
+        FirestoreUser.addUser(user);
+        //  userProvider.changeUser(user);
+        //eventProvider.changeSelectedcategory(-1, user.uID);
+        navigator.goHome();
+      } else {
+        print("No user details available.");
+      }
+    } catch (e) {
+      navigator.showDailog("Error during Google sign-in: $e");
     }
   }
 }

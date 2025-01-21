@@ -21,7 +21,7 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage>
     implements RegisterPageNavigator {
-  late UserProvider userProvider;
+
   bool passObsecure = true;
   RegisterPageViewmodel viewmodel = RegisterPageViewmodel();
 
@@ -34,7 +34,7 @@ class _RegisterPageState extends State<RegisterPage>
 
   @override
   Widget build(BuildContext context) {
-    userProvider = Provider.of<UserProvider>(context);
+    viewmodel.userProvider = Provider.of<UserProvider>(context);
     var local = AppLocalizations.of(context)!;
     Size size = MediaQuery.of(context).size;
     return ChangeNotifierProvider(

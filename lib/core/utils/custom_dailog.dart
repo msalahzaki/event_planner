@@ -29,13 +29,13 @@ class CustomDailog {
     Navigator.pop(context);
   }
 
-  static void showMessageDailog(BuildContext context,
+  static Future<void> showMessageDailog(BuildContext context,
       {String? title,
       String? message,
       String? firstButtonLabel,
       Function? firstButtonAction,
       String? secondButtonLabel,
-      Function? secondButtonAction}) {
+      Function? secondButtonAction}) async {
     actions = [];
 
     if (firstButtonLabel != null) {

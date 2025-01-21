@@ -4,10 +4,11 @@ import 'package:flutter/material.dart';
 import '../firebase/firebase_authuntace.dart';
 import '../firebase/firestore_user.dart';
 import '../model/user.dart';
+import '../providers/user_provider.dart';
 
 class RegisterPageViewmodel extends ChangeNotifier {
   var formKey = GlobalKey<FormState>();
-
+  late UserProvider userProvider;
   var accountNameController = TextEditingController();
   var emailController = TextEditingController();
   var passwordController = TextEditingController();
@@ -27,7 +28,7 @@ class RegisterPageViewmodel extends ChangeNotifier {
         navigator.showDailog("Register Successfully");
         MyUser? user = await FirestoreUser.getUserByID(
             FirebaseAuthuntace.credential.user!.uid);
-        // userProvider.changeUser(user!);
+         userProvider.changeUser(user!);
 
         navigator.goLoginPage();
       } else {

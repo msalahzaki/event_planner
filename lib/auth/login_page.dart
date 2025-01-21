@@ -17,6 +17,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
 import '../frist_run/widget/language_widget.dart';
+import '../providers/event_provider.dart';
+import '../providers/user_provider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -34,12 +36,13 @@ class _LoginPageState extends State<LoginPage> implements LoginPageNavigator {
     // TODO: implement initState
     super.initState();
     viewmodel.navigator = this;
+
   }
 
   @override
   Widget build(BuildContext context) {
-    //userProvider = Provider.of<UserProvider>(context);
-    //eventProvider = Provider.of<EventProvider>(context);
+    viewmodel.userProvider = Provider.of<UserProvider>(context);
+    viewmodel.eventProvider = Provider.of<EventProvider>(context);
 
     Size size = MediaQuery.of(context).size;
     var local = AppLocalizations.of(context)!;
@@ -191,7 +194,7 @@ class _LoginPageState extends State<LoginPage> implements LoginPageNavigator {
                         backgroundColor: AppColor.transpernt,
                         side: const BorderSide(color: AppColor.primaryLight)),
                     onPressed: () {
-                      loginWithGmail();
+                      viewmodel.loginWithGmail();
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -222,37 +225,11 @@ class _LoginPageState extends State<LoginPage> implements LoginPageNavigator {
     );
   }
 
-  void loginWithGmail() async {
-    try {
-      UserCredential? userCredential =
-          await FirebaseAuthuntace.signInWithGoogle();
 
-      // Retrieve user details
-      User? user1 = userCredential!.user;
-
-      if (user1 != null) {
-        String? username = user1.displayName;
-        String? email = user1.email;
-        MyUser user =
-            MyUser(uID: user1.uid, name: username ?? "", email: email ?? "");
-        FirestoreUser.addUser(user);
-        //  userProvider.changeUser(user);
-        //eventProvider.changeSelectedcategory(-1, user.uID);
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => const Home()));
-      } else {
-        print("No user details available.");
-      }
-    } catch (e) {
-      CustomDailog.showMessageDailog(
-          message: "Error during Google sign-in: $e",
-          context,
-          firstButtonLabel: "OK");
-    }
-  }
 
   @override
   goHome() {
+    hideLoading();
     Navigator.of(context).pushReplacement(MaterialPageRoute(
       builder: (context) => Home(),
     ));
